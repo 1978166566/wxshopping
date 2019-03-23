@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cssl.dao.DiscountProductMapper">
+    <select id="selectCommdity" resultType="map" parameterType="java.lang.Integer">
+            SELECT a.*,b.*,COUNT(`d_id`) ccount FROM `cdetails` a,`commodity` b,`discuss` c
+                                                WHERE a.`cy_id`=b.`cy_id`
+                                                AND b.`cy_id`=c.`cy_id`
+                                                AND b.`cy_id`=#{cy_id}
+    </select>
+
+    <select id="selectFlashSale" resultType="map">
+         SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_discount`, c.`p_image` FROM `commodity` a,`cdetails` b,`product` c
+								WHERE a.`cy_id`=b.`cy_id`
+								AND b.`cs_id`=c.`cs_id`
+                                                              AND a.`cy_discount`>0.6
+                                                              ORDER BY a.`cy_discount` ASC
+    </select>
+
+    <select id="selectHostSale" resultType="map" parameterType="java.lang.Integer">
+                SELECT a.`cy_id`,a.`cy_name`,a.`cy_discount`,a.cy_sales, b.`p_image`
+                                              FROM `commodity` a,`product` b,`cdetails` c
+                                              WHERE a.`cy_id`=c.`cy_id`
+                                              AND c.`cs_id`=b.`cs_id`
+                                              ORDER BY a.`cy_sales` DESC
+
+    </select>
+
+    <select id="selectBuyPage" resultType="map" parameterType="java.lang.Integer">
+                SELECT a.`cy_name`,a.`cy_price`,a.`cy_inventory`,b.`cs_version`,c.`p_image`
+                        FROM `commodity` a,`cdetails` b,`product` c
+                        WHERE a.`cy_id`=b.`cy_id`
+                        AND b.`cs_id`=c.`cs_id`
+                        AND a.`cy_id`=#{cy_id}
+    </select>
+
+    <select id="selectBuyPage1" resultType="map" parameterType="java.lang.Integer">
+               SELECT a.`cy_name`,a.`cy_price`,a.`cy_inventory`,b.`cs_version`,c.`p_image`
+                    FROM `commodity` a,`cdetails` b,`product` c
+                    WHERE a.`cy_id`=b.`cy_id`
+                    AND b.`cs_id`=c.`cs_id`
+                    AND a.`cy_id`=#{cy_id}
+                    AND b.`cs_version`=#{cs_version}
+    </select>
+
+    <select id="selectDiscuss" resultType="map" parameterType="java.lang.Integer">
+              SELECT * FROM `discuss` a,`commodity` b,`users` c
+                    WHERE a.`cy_id`=b.`cy_id`
+                    AND a.`u_id`=c.`u_id`
+                    AND b.`cy_id`=#{cy_id}
+    </select>
+
+    <select id="selectHaoPing" resultType="map" parameterType="java.lang.Integer">
+              SELECT * FROM `discuss` a,`commodity` b,`users` c
+                    WHERE a.`cy_id`=b.`cy_id`
+                    AND a.`u_id`=c.`u_id`
+                    AND a.`d_star` >=4
+                    AND b.`cy_id`=#{cy_id}
+    </select>
+
+    <select id="selectZhongPing" resultType="map" parameterType="java.lang.Integer">
+                 SELECT * FROM `discuss` a,`commodity` b,`users` c
+                        WHERE a.`cy_id`=b.`cy_id`
+                        AND a.`u_id`=c.`u_id`
+                        AND a.`d_star` =3
+                        AND b.`cy_id`=#{cy_id}
+    </select>
+
+    <select id="selectChaPing" resultType="map" parameterType="java.lang.Integer">
+                SELECT * FROM `discuss` a,`commodity` b,`users` c
+                    WHERE a.`cy_id`=b.`cy_id`
+                    AND a.`u_id`=c.`u_id`
+                    AND a.`d_star`=1
+                    AND b.`cy_id`=#{cy_id}
+
+    </select>
+</mapper>

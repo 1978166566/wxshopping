@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cssl.dao.UsersMapper">
+    <!--登陸-->
+    <select id="Login" resultType="Users">
+        SELECT * FROM Users WHERE u_name=#{param1} AND u_pwd=#{param2}
+    </select>
+    <insert id="regist" parameterType="Users">
+       INSERT INTO USERS VALUES(0,#{user.u_name},#{user.u_pwd},#{user.u_phone},#{user.u_pay_pwd},default,1,#{user.u_sex},#{user.u_email},#{user.u_address},NULL)
+    </insert>
+    <select id="selbyusername" resultType="int">
+        select count(u_name) from users where u_name=#{u_name}
+    </select>
+</mapper>

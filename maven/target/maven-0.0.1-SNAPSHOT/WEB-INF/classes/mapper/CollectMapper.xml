@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cssl.dao.CollectMapper">
+    <select id="selectUsers" resultType="com.cssl.pojo.Users" parameterType="java.lang.Integer">
+          SELECT *  FROM `users`  WHERE `u_id`=#{u_id}
+    </select>
+
+    <select id="selectUmid" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+            SELECT `um_id` FROM `user_collect` WHERE `u_id`=#{u_id}
+    </select>
+
+    <resultMap id="fuck" type="User_collect">
+        <id column="c_id" property="c_id"/>
+        <collection property="userMerchantList" ofType="User_merchant">
+            <id column="um_id" property="um_id" />
+            <result column="um_name" property="um_name"/>
+            <collection property="commodityList" ofType="Commodity">
+                <id column="cy_id" property="cy_id"/>
+                <id column="cy_price" property="cy_price"/>
+                <association property="cdetails" javaType="com.cssl.pojo.Cdetails">
+                    <association property="product" javaType="com.cssl.pojo.Product"/>
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selectAllShopProduct" resultMap="fuck" >
+          SELECT b.`um_id`,b.`um_name`,b.`um_image`,c.`cy_id`,c.`cy_price`,f.`p_image`,d.*
+                FROM `user_merchant` b,`commodity` c,`user_collect` d,`cdetails` e,`product` f
+                WHERE d.`um_id`=b.`um_id`
+                AND d.`c_pid`=c.`cy_id`
+                AND c.`cy_id`=e.`cy_id`
+                AND e.`cs_id`=f.`cs_id`
+                AND d.`u_id`=#{u_id}
+    </select>
+
+    <select id="collectThing" resultType="map">
+        SELECT b.`cy_id`,b.`cy_name`,b.`cy_price`,d.`p_image` FROM `user_collect` a,`commodity` b,`cdetails` c,`product` d
+            WHERE a.`c_pid`=b.`cy_id`
+            AND b.`cy_id`=c.`cy_id`
+            AND c.`cs_id`=d.`cs_id`
+    </select>
+
+    <select id="selectBySouSuo" resultType="map">
+        SELECT a.`cy_name`,a.`cy_price`,c.`p_image`
+                FROM `commodity` a,`cdetails` b,`product` c
+                WHERE a.`cy_id`=b.`cy_id`
+                AND b.`cs_id`=c.`cs_id`
+                AND a.`cy_name`LIKE  "%"#{cy_name}"%"
+
+    </select>
+</mapper>

@@ -1,0 +1,437 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+    <meta name="renderer" content="webkit">
+    <meta content="歪秀购物, 购物, 大家电, 手机" name="keywords">
+    <meta content="歪秀购物，购物商城。" name="description">
+    <title>会员系统退货申请</title>
+    <link rel="shortcut icon" type="image/x-icon" href="theme/icon/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="theme/css/base.css">
+    <link rel="stylesheet" type="text/css" href="theme/css/member.css">
+    <link rel="stylesheet" type="text/css" href="theme/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <script type="text/javascript" src="theme/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="theme/lib/layer/2.4/layer.js"></script>
+    <script type="text/javascript" src="theme/js/jquery.js"></script>
+    <script type="text/javascript" src="theme/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="theme/js/my-d.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $(function(){
+            $("#H-table li").each(function(i){
+                $(this).click((function(k){
+                    var _index = k;
+                    return function(){
+                        $(this).addClass("cur").siblings().removeClass("cur");
+                        $(".H-over").hide();
+                        $(".H-over:eq(" + _index + ")").show();
+                    }
+                })(i));
+            });
+        });
+    </script>
+</head>
+<body>
+
+<!--- header begin-->
+<header id="pc-header">
+    <div class="BHeader">
+        <div class="yNavIndex">
+            <ul class="BHeaderl">
+                <li><a href="#">登录</a> </li>
+                <li class="headerul">|</li>
+                <li><a href="#">订单查询</a> </li>
+                <li class="headerul">|</li>
+                <li><a href="#">我的收藏</a> </li>
+                <li class="headerul">|</li>
+                <li id="pc-nav" class="menu"><a href="#" class="tit">我的商城</a>
+                    <div class="subnav">
+                        <a href="#">我的山城</a>
+                        <a href="#">我的山城</a>
+                        <a href="#">我的山城</a>
+                    </div>
+                </li>
+                <li class="headerul">|</li>
+                <li><a href="#" class="M-iphone">手机悦商城</a> </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container clearfix">
+        <div class="header-logo fl"><h1><a href="#"><img src="theme/icon/logo.png"></a> </h1></div>
+        <div class="member-title fl"><h2></h2></div>
+        <div class="head-form fl">
+            <form class="clearfix">
+                <input type="text" class="search-text" accesskey="" id="key" autocomplete="off"  placeholder="洗衣机">
+                <button class="button" onClick="search('key');return false;">搜索</button>
+            </form>
+            <!--
+            <div class="words-text clearfix">
+                <a href="#" class="red">1元秒爆</a>
+                <a href="#">低至五折</a>
+                <a href="#">农用物资</a>
+                <a href="#">买一赠一</a>
+                <a href="#">佳能相机</a>
+                <a href="#">稻香村月饼</a>
+                <a href="#">服装城</a>
+            </div>
+            -->
+        </div>
+        <div class="header-cart fr"><a href="#"><img src="theme/icon/car.png"></a> <i class="head-amount">99</i></div>
+    </div>
+</header>
+<!-- header End -->
+
+<div class="containers"><div class="pc-nav-item"><a href="#">首页</a> &gt; <a href="#">会员中心 </a> &gt; <a href="#">商城快讯</a></div></div>
+
+<!-- 商城快讯 begin -->
+<section id="member">
+    <div class="member-center clearfix">
+        <div class="member-left fl">
+            <div class="member-apart clearfix">
+                <div class="fl"><a href="#"><img src="theme/img/bg/mem.png"></a></div>
+                <div class="fl">
+                    <p>用户名：</p>
+                    <p><a href="#">亚里士多德</a></p>
+                    <p>搜悦号：</p>
+                    <p>389323080</p>
+                </div>
+            </div>
+            <div class="member-lists">
+                <dl>
+                    <dt>我的商城</dt>
+                    <dd class="cur"><a href="#">我的订单</a></dd>
+                    <dd><a href="#">我的收藏</a></dd>
+                    <dd><a href="#">账户安全</a></dd>
+                    <dd><a href="#">我的评价</a></dd>
+                    <dd><a href="#">地址管理</a></dd>
+                </dl>
+                <dl>
+                    <dt>客户服务</dt>
+                    <dd><a href="#">退货申请</a></dd>
+                    <dd><a href="#">退货/退款记录</a></dd>
+                </dl>
+                <dl>
+                    <dt>我的消息</dt>
+                    <dd><a href="#">商城快讯</a></dd>
+                    <dd><a href="#">帮助中心</a></dd>
+                </dl>
+            </div>
+        </div>
+        <div class="member-right fr">
+            <div class="member-head">
+                <div class="member-heels fl"><h2>我的订单</h2></div>
+                <div class="member-backs member-icons fr"><a id="isorders" href="javascript:void(0);">搜索</a></div>
+                <div class="member-about fr"><input name="number" type="text" placeholder="订单编号"></div>
+            </div>
+            <div class="member-whole clearfix">
+                <ul id="H-table" class="H-table">
+                    <li id="cur" class="cur"><a href="#">我的订单</a></li>
+                    <li id="cur1"><a href="#">待付款<em th:text="${obligationcount}">(44)</em></a></li>
+                    <li id="cur2"><a href="#">待发货</a></li>
+                    <li id="cur3"><a href="#">待收货</a></li>
+                    <li id="cur4"><a href="#">交易完成</a></li>
+                </ul>
+            </div>
+            <div class="member-border">
+                <div class="member-return H-over">
+                    <div class="member-cancel clearfix">
+                        <span class="be1">订单信息</span>
+                        <span class="be2">收货人</span>
+                        <span class="be2">订单金额</span>
+                        <span class="be2">订单时间</span>
+                        <span class="be2">订单状态</span>
+                        <span class="be2">订单操作</span>
+                    </div>
+                    <div class="member-sheet clearfix">
+                        <ul class="s">
+                            <li th:each="list,varstart:${orders}">
+                                <div class="member-minute clearfix">
+                                    <span th:text="${#dates.format(list.getO_time(),'yyyy-MM-dd HH:mm:ss')}">2015-09-22 18:22:33</span>
+                                    <span>订单号：<em id="o_number" th:text="${list.getO_number()}">98653056821</em></span>
+                                </div>
+                                <div class="member-circle clearfix">
+                                    <div class="ci1">
+                                        <div th:each="map,varstart:${list.getList()}" class="ci7 clearfix">
+                                            <span class="gr1"><a th:href="@{discountProduct(cyid=${map.get('CY_ID')})}"><img th:src="${map['P_IMAGE']}" width="60" height="60" title="" about=""></a></span>
+                                            <span class="gr2"><a th:href="@{discountProduct(cyid=${map.get('CY_ID')})}" th:text="${map['CY_NAME']}">红米Note2 标准版 白色 移动4G手机 双卡双待</a></span>
+                                            <span class="gr3">X<em th:text="${map['OD_QUANTITY']}"></em></span>
+                                        </div>
+                                    </div>
+                                    <div class="ci2" th:text="${list.getList()[0].get('U_NAME')}">张子琪</div>
+                                    <div class="ci3"><b>￥<em th:text="${list.getO_totalprice()}"></em></b><p th:if="${list.getO_payment() eq 1}">货到付款</p><p th:if="${list.getO_payment() eq 2}">在线支付</p></div>
+                                    <div class="ci4"><p th:text="${#dates.format(list.o_time,'yyyy-MM-dd')}">2015-09-22</p></div>
+                                    <div class="ci5"><p th:if="${list.getO_type() eq 1}">等待付款</p><p th:if="${list.getO_type() eq 2}">等待商家发货</p><p th:if="${list.getO_type() eq 3}">等待收货</p><p th:if="${list.getO_type() eq 4}">交易完成</p></p><p th:if="${list.getO_type() eq 5}">订单已取消</p><p th:if="${list.getO_type() eq 6}">已退货</p></div>
+                                    <div class="ci5 ci8"> <p th:if="${list.o_type eq 4 or list.o_type eq 5 or list.o_type eq 6}"><a th:href="@{'queryorder?o_number='+${list.getO_number()}+'&id='+${list.getU_id()}}" target="_self">查看</a> | <a id="delorder" href="javascript:void(0);">删除</a></p><p th:if="${list.o_type eq 4}"><a id="salesreturn" href="javascript:void(0);">退货</a></p><p th:if="${list.getO_type() ne 4 and list.getO_type() ne 5 and list.getO_type() ne 6}"><a th:href="@{'queryorder?o_number='+${list.getO_number()}+'&id='+${list.getU_id()}}">查看</a> | <a id="cancellation" href="javascript:void(0);">取消订单</a> </p><p th:if="${list.o_type eq 3}"><a id="confirmreceipt" href="javascript:void(0);" class="member-touch">确认收货</a> </p> </div>
+                                </div>
+                            </li>
+                            <input type="hidden" id="userid" th:value="${session.getUser.getU_id()}"/>
+                        </ul>
+                    </div>
+                </div>
+                <div class="member-return H-over" style="display:none;">
+                    <div class="member-cancel clearfix">
+                        <span class="be1">订单信息</span>
+                        <span class="be2">收货人</span>
+                        <span class="be2">订单金额</span>
+                        <span class="be2">订单时间</span>
+                        <span class="be2">订单状态</span>
+                        <span class="be2">订单操作</span>
+                    </div>
+                    <div class="member-sheet clearfix">
+                        <ul class="s">
+                            <li>
+                                <div class="member-minute clearfix">
+                                    <span>2015-09-22 18:22:33</span>
+                                    <span>订单号：<em>98653056821</em></span>
+                                </div>
+                                <div class="member-circle clearfix">
+                                    <div class="ci1">
+                                        <div class="ci7 clearfix">
+                                            <span class="gr1"><a href="#"><img src="theme/img/pd/m1.png" width="60" height="60" title="" about=""></a></span>
+                                            <span class="gr2"><a href="#">红米Note2 标准版 白色 移动4G手机 双卡双待</a></span>
+                                            <span class="gr3">X1</span>
+                                        </div>
+                                    </div>
+                                    <div class="ci2" >张子琪</div>
+                                    <div class="ci3"><b>￥120.00</b><p>货到付款</p></div>
+                                    <div class="ci4"><p>2015-09-22</p></div>
+                                    <div class="ci5"><p>等待付款</p></div>
+                                    <div class="ci5 ci8"> <p><a href="#" class="member-touch">立即支付</a> </p> <p><a href="#">取消订单</a> </p></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="H-over member-return" style="display:none;">
+                    <div class="member-cancel clearfix">
+                        <span class="be1">订单信息</span>
+                        <span class="be2">收货人</span>
+                        <span class="be2">订单金额</span>
+                        <span class="be2">订单时间</span>
+                        <span class="be2">订单状态</span>
+                        <span class="be2">订单操作</span>
+                    </div>
+                    <div class="member-sheet clearfix">
+                        <ul class="s">
+                            <li>
+                                <div class="member-minute clearfix">
+                                    <span>2015-09-22 18:22:33</span>
+                                    <span>订单号：<em>98653056821</em></span>
+                                </div>
+                                <div class="member-circle clearfix">
+                                    <div class="ci1">
+                                        <div class="ci7 clearfix">
+                                            <span class="gr1"><a href="#"><img src="theme/img/pd/m1.png" width="60" height="60" title="" about=""></a></span>
+                                            <span class="gr2"><a href="#">红米Note2 标准版 白色 移动4G手机 双卡双待</a></span>
+                                            <span class="gr3">X1</span>
+                                        </div>
+                                    </div>
+                                    <div class="ci2" >张子琪</div>
+                                    <div class="ci3"><b>￥120.00</b><p>货到付款</p></div>
+                                    <div class="ci4"><p>2015-09-22</p></div>
+                                    <div class="ci5"><p>等待付款</p></div>
+                                    <div class="ci5 ci8"> <p><a href="#" class="member-touch">立即支付</a> </p> <p><a href="#">取消订单</a> </p></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="H-over member-return" style="display:none;">
+                    <div class="member-cancel clearfix">
+                        <span class="be1">订单信息</span>
+                        <span class="be2">收货人</span>
+                        <span class="be2">订单金额</span>
+                        <span class="be2">订单时间</span>
+                        <span class="be2">订单状态</span>
+                        <span class="be2">订单操作</span>
+                    </div>
+                    <div class="member-sheet clearfix">
+                        <ul class="s">
+                            <li>
+                                <div class="member-minute clearfix">
+                                    <span>2015-09-22 18:22:33</span>
+                                    <span>订单号：<em>98653056821</em></span>
+                                </div>
+                                <div class="member-circle clearfix">
+                                    <div class="ci1">
+                                        <div class="ci7 clearfix">
+                                            <span class="gr1"><a href="#"><img src="theme/img/pd/m1.png" width="60" height="60" title="" about=""></a></span>
+                                            <span class="gr2"><a href="#">红米Note2 标准版 白色 移动4G手机 双卡双待</a></span>
+                                            <span class="gr3">X1</span>
+                                        </div>
+                                    </div>
+                                    <div class="ci2" >张子琪</div>
+                                    <div class="ci3"><b>￥120.00</b><p>货到付款</p></div>
+                                    <div class="ci4"><p>2015-09-22</p></div>
+                                    <div class="ci5"><p>等待付款</p></div>
+                                    <div class="ci5 ci8"> <p><a href="#" class="member-touch">立即支付</a> </p> <p><a href="#">取消订单</a> </p></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="H-over member-return" style="display:none;">
+                    <div class="member-cancel clearfix">
+                        <span class="be1">订单信息</span>
+                        <span class="be2">收货人</span>
+                        <span class="be2">订单金额</span>
+                        <span class="be2">订单时间</span>
+                        <span class="be2">订单状态</span>
+                        <span class="be2">订单操作</span>
+                    </div>
+                    <div class="member-sheet clearfix">
+                        <ul class="s">
+                            <li>
+                                <div class="member-minute clearfix">
+                                    <span>2015-09-22 18:22:33</span>
+                                    <span>订单号：<em>98653056821</em></span>
+                                </div>
+                                <div class="member-circle clearfix">
+                                    <div class="ci1">
+                                        <div class="ci7 clearfix">
+                                            <span class="gr1"><a href="#"><img src="theme/img/pd/m1.png" width="60" height="60" title="" about=""></a></span>
+                                            <span class="gr2"><a href="#">红米Note2 标准版 白色 移动4G手机 双卡双待</a></span>
+                                            <span class="gr3">X1</span>
+                                        </div>
+                                    </div>
+                                    <div class="ci2" >张子琪</div>
+                                    <div class="ci3"><b>￥120.00</b><p>货到付款</p></div>
+                                    <div class="ci4"><p>2015-09-22</p></div>
+                                    <div class="ci5"><p>等待付款</p></div>
+                                    <div class="ci5 ci8"> <p><a href="#" class="member-touch">立即支付</a> </p> <p><a href="#">取消订单</a> </p></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="pagesfye" class="clearfix" style="padding:30px 20px;">
+                    <div class="fr pc-search-g pc-search-gs">
+                        <a class="fl" id="s" href="javascript:void(0);">上一页</a>
+                        <p id="p" style="display: inline;">
+                            <a class="pagenum" th:each="page,varstart:${pages}" th:value="${page}" href="javascript:void(0);" style="color: red;" th:if="${page ne 0 and page eq orders.getPageNum()}" th:text="${page}">1</a>
+                            <a class="pagenum" th:each="page,varstart:${pages}" th:value="${page}" href="javascript:void(0);" th:if="${page ne 0 and page ne orders.getPageNum()}" th:text="${page}">1</a>
+                        </p>
+                        <a id="x" href="javascript:void(0);">下一页</a>
+                    </div>
+                    <input type="hidden" name="pagenum" th:value="${pagenum}"/>
+                    <input type="hidden" name="o_type" value="0"/>
+                    <input type="hidden" name="pages" th:value="${totalpage}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 商城快讯 End -->
+
+<!--- footer begin-->
+<div class="aui-footer-bot">
+    <div class="time-lists aui-footer-pd clearfix">
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d1.png"></span>
+                <em>消费者权益</em>
+            </h4>
+            <ul>
+                <li><a href="#">保障范围 </a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d2.png"></span>
+                <em>新手上路</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d3.png"></span>
+                <em>保障正品</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d1.png"></span>
+                <em>消费者权益</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+    </div>
+    <div style="border-bottom:1px solid #dedede"></div>
+    <div class="time-lists aui-footer-pd time-lists-ls clearfix">
+        <div class="aui-footer-list clearfix">
+            <h4>购物指南</h4>
+            <ul>
+                <li><a href="#">保障范围 </a> </li>
+                <li><a href="#">购物流程</a> </li>
+                <li><a href="#">会员介绍 </a> </li>
+                <li><a href="#">生活旅行</a> </li>
+                <li><a href="#"> 常见问题 </a> </li>
+                <li><a href="#"> 联系客服购物指南 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>特色服务</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>帮助中心</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>新手指导</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- footer End -->
+</body>
+</html>

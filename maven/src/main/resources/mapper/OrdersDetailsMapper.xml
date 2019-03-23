@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cssl.dao.OrdersDetailsMapepr">
+       <delete id="delOrdersDetails" parameterType="String">
+                          DELETE FROM ORDERS_DETAILS WHERE O_NUMBER=#{O_NUMBER}
+                        </delete>
+      <select id="seloneordersdetails" resultType="map">
+                            SELECT OD.OD_PIRCE,OD.OD_QUANTITY,C.CY_ID,C.CY_INTRODUCTION,C.CY_PRICE FROM ORDERS_DETAILS OD
+                            INNER JOIN COMMODITY C ON (OD.CY_ID=C.CY_ID)
+                            WHERE OD.O_NUMBER=#{o_number}
+                        </select>
+</mapper>

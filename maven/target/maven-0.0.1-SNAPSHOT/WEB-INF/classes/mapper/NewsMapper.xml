@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cssl.dao.NewsMapper">
+    <select id="selectAll" resultType="News">
+        SELECT * FROM news
+    </select>
+    <select id="selectByName" resultType="News">
+        SELECT * FROM news WHERE n_title LIKE  "%"#{n_content}"%"
+    </select>
+</mapper>

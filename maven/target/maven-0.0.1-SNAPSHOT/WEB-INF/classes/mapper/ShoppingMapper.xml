@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cssl.dao.ShoppingMapper">
+    <!--插入购物车数据-->
+    <insert id="instShopping" parameterType="Shopping">
+        INSERT INTO `shopping` VALUES(0,#{cy_id},#{sp_quantity},#{u_id});
+    </insert>
+    <!--查询该用户的购物车详情-->
+    <select id="selShoppingInfo" resultType="Map">
+         SELECT a.*,b.`cy_introduction`,b.`cy_name`,b.`cy_price`,d.`p_image` FROM `shopping` a,`commodity` b,`cdetails` c,`product` d
+         WHERE  a.`cy_id`=b.`cy_id` AND b.`cy_id`=c.`cy_id` AND c.`cs_id`=d.`cs_id` AND a.`u_id`=#{u_id}
+    </select>
+    <!--查询指定用户下的商品-->
+    <select id="selShopping" resultType="Shopping" parameterType="int">
+       SELECT * FROM `shopping` WHERE `u_id`=#{u_id}
+    </select>
+    <!--更改购物车商品数量-->
+    <update id="upShoppingNum" parameterType="map">
+        UPDATE `shopping` SET `sp_quantity`=#{sp_quantity} where `sp_id`=#{sp_id}
+    </update>
+   <!--根据购物车商品ID查询商品信息-->
+    <select id="selProByID" resultType="map">
+         SELECT b.`cy_introduction`,b.`cy_name`,b.`cy_price`,d.`p_image` FROM `commodity` b,`cdetails` c,`product` d
+         WHERE  b.`cy_id`=c.`cy_id` AND c.`cs_id`=d.`cs_id` AND b.`cy_id`=#{d_id}
+    </select>
+    <!--根据购物车id删除购物车记录-->
+    <delete id="delShoppingById">
+        DELETE FROM `shopping`WHERE `sp_id`=#{sp_id}
+    </delete>
+    <!--查询该用户下的某个商品的数量-->
+    <select id="selProSum" parameterType="map" resultType="int">
+        SELECT SUM(sp_quantity) FROM `shopping` WHERE `u_id`=#{u_id} AND `cy_id`=#{cy_id}
+    </select>
+</mapper>

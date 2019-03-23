@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cssl.dao.SolrMapper">
+    <!--查询品牌-->
+    <select id="selectFlat" parameterType="java.lang.Integer" resultType="map">
+        SELECT `f_id`,`f_name` FROM `flat` WHERE `oc_id`=18
+    </select>
+    <!--查询尺寸-->
+    <select id="selectCsSize" resultType="map">
+        SELECT DISTINCT(`cs_size`) cs_size FROM `cdetails`
+    </select>
+    <!--查询系统-->
+    <select id="selectCsSystem" resultType="map">
+          SELECT DISTINCT(`cs_system`) cs_system FROM `cdetails`
+    </select>
+    <!--根据品牌查找商品-->
+    <select id="selectFlatProduct" resultType="map">
+        SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c
+            WHERE a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            AND a.`cy_name`LIKE "%"#{cy_name}"%"
+    </select>
+    <!--根据商品尺寸查找商品-->
+    <select id="selectProductSize" resultType="map">
+        SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c,`cdetails` d
+            WHERE a.`cy_id`=d.`cy_id`
+            AND a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            AND d.`cs_size`=#{cs_size}
+    </select>
+    <!--根据系统查找-->
+    <select id="selectSystem" resultType="map">
+        SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c,`cdetails` d
+            WHERE a.`cy_id`=d.`cy_id`
+            AND a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            AND d.`cs_system`like "%"#{cs_system}"%"
+    </select>
+    <!--根据销量排序-->
+    <select id="selectSalesOrder" resultType="map">
+          SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c,`cdetails` d
+            WHERE a.`cy_id`=d.`cy_id`
+            AND a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            ORDER BY cy_sales DESC
+    </select>
+
+    <!--根据价格排序-->
+    <select id="selectPriceOrder" resultType="map">
+          SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c,`cdetails` d
+            WHERE a.`cy_id`=d.`cy_id`
+            AND a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            ORDER BY `cy_price` DESC
+    </select>
+
+    <!--根据商家时间排序-->
+    <select id="selectTimeOrder" resultType="map">
+          SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c,`cdetails` d
+            WHERE a.`cy_id`=d.`cy_id`
+            AND a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            ORDER BY `cy_shelftime` DESC
+    </select>
+
+    <!--查找存货大于0的商品-->
+    <select id="selectInventory" resultType="map">
+          SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c,`cdetails` d
+            WHERE a.`cy_id`=d.`cy_id`
+            AND a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            AND a.`cy_inventory`>0
+    </select>
+
+    <!--限时抢购的商品-->
+    <select id="selectDisCount" resultType="map">
+                SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c,`cdetails` d
+            WHERE a.`cy_id`=d.`cy_id`
+            AND a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            AND a.`cy_discount`>0
+            ORDER BY a.`cy_discount` ASC
+    </select>
+
+    <insert id="insertCollect"  useGeneratedKeys="true" keyProperty="c_id">
+         INSERT INTO `user_collect` VALUES(0,#{c_pid},#{um_id},#{u_id})
+    </insert>
+
+    <select id="selectSouSuo" resultType="Map" parameterType="Map">
+          SELECT a.`cy_id`,a.`cy_name`,a.`cy_price`,a.`cy_sales`,c.`p_image` FROM `commodity` a,`cdetails` b,`product` c,`cdetails` d
+            WHERE a.`cy_id`=d.`cy_id`
+            AND a.`cy_id`=b.`cy_id`
+            AND b.`cs_id`=c.`cs_id`
+            AND a.cy_name LIKE "%"#{cy_name}"%"
+	        AND a.`cy_price` BETWEEN #{cy_price} AND #{cy_price1}
+    </select>
+
+</mapper>

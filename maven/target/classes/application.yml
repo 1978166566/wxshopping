@@ -1,0 +1,37 @@
+#数据源    
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///mysqlqsym?serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    #solr配置
+  data:
+    solr:
+      host: http://localhost:5656/solr
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    time-zone: GMT+8
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/templates/
+  thymeleaf:
+      encoding: UTF-8
+      cache: false
+      prefix: classpath:/templates/
+      suffix: .html
+  ##视图解析器
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  type-aliases-package: com.cssl.pojo
+#  configuration:
+#    auto-mapping-behavior: Full
+#    use-generated-keys: true
+  mapper-locations:
+    - classpath:mapper/*.xml
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  page-size-zero: true
+#debug: true

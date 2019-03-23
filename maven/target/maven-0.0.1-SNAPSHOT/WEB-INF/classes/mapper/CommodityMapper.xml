@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cssl.dao.CommodityMapper">
+    <!--卖场推荐-->
+    <select id="mall" resultType="Map">
+          SELECT b.`cy_id`,`p_image`,`tc_id` ,MAX(`cy_sales`) FROM `product` a,`commodity` b,`cdetails` c
+          WHERE a.`cs_id`=c.`cs_id` AND b.`cy_id`=c.`cy_id`
+          GROUP BY `tc_id`
+    </select>
+    <!--查询二级分类下的商品-->
+    <select id="selTowPro" resultType="Map" >
+             SELECT `p_image`,b.`cy_id` ,cy_name ,cy_price FROM `product` a,`commodity` b,`cdetails` c
+             WHERE a.`cs_id`=c.`cs_id` AND b.`cy_id`=c.`cy_id`
+             AND b.`tc_id` IN (
+             SELECT tc_id FROM tow_class WHERE oc_id=#{oc_id}) LIMIT 6
+    </select>
+
+    <select id="selcomm" resultType="map">
+        SELECT C.CY_ID,C.CY_NAME,P.P_IMAGE FROM ONE_CLASS O
+        INNER JOIN ONE_CLASS OE ON(O.OC_ID=OE.OC_FID)
+        INNER JOIN TOW_CLASS T ON(OE.OC_ID=T.OC_ID)
+        INNER JOIN commodity C ON(T.TC_ID=C.TC_ID)
+        INNER JOIN cdetails CD ON(C.CY_ID=CD.CY_ID)
+        INNER JOIN PRODUCT P ON(CD.CS_ID=P.CS_ID)
+        <where>
+            <if test="judge!=null and judge!=''">
+                <if test="judge==1">
+                    O.OC_ID=#{c_id}
+                </if>
+                <if test="judge==2">
+                    OE.OC_ID=#{c_id}
+                </if>
+                <if test="judge==3">
+                    T.TC_ID=#{c_id}
+                </if>
+            </if>
+        </where>
+        GROUP BY C.CY_ID
+    </select>
+    <update id="updaquantity" parameterType="map">
+                        UPDATE COMMODITY SET CY_INVENTORY=CY_INVENTORY+#{CY_INVENTORY}
+                        WHERE CY_ID=#{cy_id}
+                    </update>
+</mapper>

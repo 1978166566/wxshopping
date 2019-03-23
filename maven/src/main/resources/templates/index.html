@@ -1,0 +1,721 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+	<meta charset="UTF-8">
+	<meta name="Generator" content="EditPlus®">
+	<meta name="Author" content="">
+	<meta name="Keywords" content="">
+	<meta name="Description" content="">
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"> 
+	<meta name="renderer" content="webkit">
+	<title>歪秀购物</title>
+    <link rel="shortcut icon" type="image/x-icon" href="theme/icon/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="theme/css/base.css">
+	<link rel="stylesheet" type="text/css" href="theme/css/home.css">
+	<script type="text/javascript" src="theme/js/jquery.js"></script>
+	<script type="text/javascript" src="theme/js/index.js"></script>
+	<script type="text/javascript" src="theme/js/js-tab.js"></script>
+	<script type="text/javascript" src="theme/js/MSClass.js"></script>
+	<script type="text/javascript" src="theme/js/jcarousellite.js"></script>
+	<script type="text/javascript" src="theme/js/top.js"></script>
+    <script type="text/javascript">
+         var intDiff = parseInt(80000);//倒计时总秒数量
+         function timer(intDiff){
+             window.setInterval(function(){
+                 var day=0,
+                         hour=0,
+                         minute=0,
+                         second=0;//时间默认值
+                 if(intDiff > 0){
+                     day = Math.floor(intDiff / (60 * 60 * 24));
+                     hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                     minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                     second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                 }
+                 if (minute <= 9) minute = '0' + minute;
+                 if (second <= 9) second = '0' + second;
+
+                 $('#hour_show').html('<s id="h"></s>'+hour+'');
+                 $('#minute_show').html('<s></s>'+minute+'');
+                 $('#second_show').html('<s></s>'+second+'');
+                 intDiff--;
+             }, 1000);
+         }
+
+         $(function(){
+             timer(intDiff);
+             /*显示购物车的商品的数量*/
+             $.post("selShopCount",function(data){
+                 $(".head-amount").text(data);
+             });
+         });
+
+     </script>
+ </head>
+ <body>
+
+
+<div>
+    <div id="moquu_wxin" class="moquu_wxin"><a href="javascript:void(0)"><div class="moquu_wxinh"></div></a></div>
+    <div id="moquu_wshare" class="moquu_wshare"><a href="javascript:void(0)" style="text-indent:0"><div class="moquu_wshareh"><img src="theme/icon/moquu_wshare.png" width="100%"></div></a></div>
+    <div id="moquu_wmaps"><a href="javascript:void(0)" class='moquu_wmaps'></a></div>
+    <a id="moquu_top" href="javascript:void(0)"></a>
+</div>
+
+<!--- header begin-->
+<header id="pc-header">
+    <div class="BHeader">
+        <div class="yNavIndex">
+            <ul class="BHeaderl">
+                <li style="display:none;"><a href="#" style="float:left;">嘻哈杂货铺</a> <a href="#" style="float:left;">退出</a> </li>
+                <li th:if="${session.getUser == null}"><a href="login.html" style="color:#e6ead0;">请登录</a> </li>
+                <li class="headerul">|</li>
+                <li><a href="register.html">免费注册</a> </li>
+                <li class="headerul">|</li>
+                <li><a href="my-d.html">订单查询</a> </li>
+                <li class="headerul">|</li>
+                <li><a href="/test1">我的收藏</a> </li>
+                <li class="headerul">|</li>
+                <li id="pc-nav" class="menu"><a href="my-user.html" class="tit">我的商城</a>
+                    <div class="subnav">
+                        <a th:if="${session.getUser ne null}"th:href="@{getorders(id=${session.getUser.getU_id()})}">我的订单</a>
+                        <a th:if="${session.getUser eq null}" href="#">我的订单</a>
+                        <a  th:if="${session.getUser ne null}" th:href="@{selectUserName(uid=${session.getUser.getU_id()})}">我的收藏</a>
+                        <a  th:if="${session.getUser eq null}" href="#">我的收藏</a>
+                        <a href="my-user.html">账户安全</a>
+                        <a href="my-add.html">地址管理</a>
+                        <a href="my-p.html">我要评价</a>
+                    </div>
+                </li>
+                <li class="headerul">|</li>
+               <li id="pc-nav1" class="menu"> <!--<a href="#" class="tit M-iphone">手机悦商城</a>-->
+                   <div class="subnav">
+                       <a href="#"><img src="theme/icon/ewm.png" width="115" height="115" title="扫一扫，有惊喜！"></a>
+                   </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container clearfix">
+        <div class="header-logo fl"><h1><a href="首页.html"><img src="theme/icon/logo.png"></a> </h1></div>
+        <div class="head-form fl">
+            <form class="clearfix" action="/selectAll">
+                <input type="text" name="cyname" class="search-text" accesskey="" id="key" autocomplete="off"  placeholder="小米">
+                <button class="button" type="submit" return true;>搜索</button>
+            </form>
+            <div class="words-text clearfix">
+                <!--<a href="#" class="red">1元秒爆</a>-->
+                <!--<a href="#">低至五折</a>-->
+                <!--<a href="#">农用物资</a>-->
+                <!--<a href="#">买一赠一</a>-->
+                <!--<a href="#">佳能相机</a>-->
+                <!--<a href="#">稻香村月饼</a>-->
+                <!--<a href="#">服装城</a>-->
+            </div>
+        </div>
+        <div class="header-cart fr"><a href="selShoppingInfo"><img src="theme/icon/car.png"></a><i class="head-amount">0</i></div>
+        <div class="head-mountain"></div>
+    </div>
+    <div class="yHeader">
+        <div class="yNavIndex">
+            <div class="pullDown">
+            <h2 class="pullDownTitle">
+                全部商品分类
+            </h2>
+            <ul class="pullDownList">
+                <li class="menulihover"th:each="str,statu:${session.loadclass}">
+                    <i th:class="'list'+${statu.count}"></i>
+                    <a th:href="@{'selcommodity?id='+${str.getOc_id()}+'&fix=1'+'&classname='+${str.getOc_name()}+'&parentid='+${str.getOc_id()}}" target="_blank" th:text="${ str.oc_name }">
+                    </a>
+                    <span></span>
+                </li>
+            </ul>
+            <div class="yMenuListCon">
+
+                <div class="yMenuListConin" th:each="str,statu:${session.loadclass}">
+                    <div class="yMenuLCinLisi fl">
+                        <ul>
+                            <li th:each="str2,statu2:${session.loadclass.get(statu.index).getStair()}">
+                                <a th:href="@{'selcommodity?id='+${str2.getOc_id()}+'&fix=2'+'&classname='+${str2.getOc_name()}+'&parentid='+${str.getOc_id()}}"><i class="fr" th:text="${str2.getOc_name()}">></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="yMenuLCinList fl">
+                        <p th:each="str2,statu2:${session.loadclass.get(statu.index).getStair()}">
+                            <a th:each="str3,statu3:${session.loadclass.get(statu.index).getStair().get(statu2.index).getSecond()}" th:href="@{'selcommodity?id='+${str3.getTc_id()}+'&fix=3'+'&classname='+${str2.getOc_name()}+'&parentid='+${str2.getOc_id()}}" class="ecolor610" >[[${str3.tc_content}]]</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <ul class="yMenuIndex">
+                <li><a href="" target="_blank">服装城</a></li>
+                <li><a href="" target="_blank">美妆馆</a></li>
+                <li><a href="" target="_blank">美食</a></li>
+                <li><a href="" target="_blank">全球购</a></li>
+                <li><a href="" target="_blank">闪购</a></li>
+                <li><a href="" target="_blank">团购</a></li>
+                <li><a href="" target="_blank">拍卖</a></li>
+                <li><a href="" target="_blank">金融</a></li>
+                <li><a href="" target="_blank">智能</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<!-- header End -->
+
+<!--- banner begin-->
+<section id="pc-banner">
+    <div class="yBanner">
+        <div class="banner" id="banner" >
+            <a href="javascript:;" class="d1" style="background:url(theme/img/ad/banner1.jpg) center no-repeat;background-color: #f01a38; padding-left:180px;"></a>
+            <a href="javascript:;" class="d1" style="background:url(theme/img/ad/banner2.jpg) center no-repeat;background-color: #a96ae3; padding-left:180px;"></a>
+            <a href="javascript:;" class="d1" style="background:url(theme/img/ad/banner4.png) center no-repeat;background-color: #238CF8; padding-left:180px;"></a>
+            <a href="javascript:;" class="d1" style="background:url(theme/img/ad/banner5.png) center no-repeat;background-color: #CFF19D; padding-left:180px;"></a>
+            <a href="javascript:;" class="d1" style="background:url(theme/img/ad/banner3.jpg) center no-repeat;background-color: #E8E8E8; padding-left:180px;"></a>
+            <div class="d2" id="banner_id">
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+        <div style="text-align:center;clear:both"></div>
+    </div>
+</section>
+<!-- banner End -->
+
+
+<!--- advert begin-->
+ <section id="pc-advert">
+    <div class="container-c clearfix">
+        <a href="page1.html" target="_blank"><img src="theme/img/pd/pd1.png"></a>
+        <a href="page1.html" target="_blank"><img src="theme/img/pd/pd2.png"></a>
+        <a href="page1.html" target="_blank"><img src="theme/img/pd/pd3.png"></a>
+        <a href="page1.html" target="_blank"><img src="theme/img/pd/pd4.png"></a>
+    </div>
+</section> 
+<!-- advert End -->
+
+<!-- 商城资讯 begin -->
+<section id="pc-information">
+    <div class="containers">
+        <div class="pc-info-mess  clearfix" style="position: relative;">
+            <h2 class="fl" style="margin-right:20px;">商城快讯</h2>
+            <div id="MarqueeDiv" class="MarqueeDiv">
+            	<a href="selectNews" th:each="ujujuj:${session.mapNew}" th:text="${ujujuj.getN_title()}"></a>
+            </div>
+            <a href="new.html" style="position: absolute;right: 15px;top: 0;"> 更多资讯</a>
+        </div>
+    </div>
+</section>
+<!-- 商城资讯 End -->
+
+<!-- 限时抢购 begin -->
+<div class="time-lists clearfix">
+    <div class="time-list fl">
+        <div class="time-title">
+            <h2>限时抢购</h2>
+            <div class="time-item clearfix fl" style="padding-left:10px;">
+                <strong id="hour_show">00</strong>
+                <strong class="pc-clear-sr">:</strong>
+                <strong id="minute_show">00</strong>
+                <strong class="pc-clear-sr">:</strong>
+                <strong id="second_show">00</strong>
+            </div><!--倒计时模块-->
+            <a href="sale-begin.html" class="fr">更多抢购商品</a>
+        </div>
+        <div class="time-border">
+            <div class="yScrollList">
+                <div class="yScrollListIn">
+                	<a class="yScrollListbtn yScrollListbtnl" id="prev-01"></a>
+                    <div class="yScrollListInList yScrollListInList1 jCarouselLite" style="display:block;margin-left: 20px;" id="demo-01">
+                        <ul>
+                            <li th:each="map:${session.mapList}">
+                                <a th:href="@{discountProduct(cyid=${map['cy_id']})}" target="_blank">
+                                    <img th:src="@{${map['p_image']}}">
+                                    <p class="head-name" th:text="${map['cy_name']}">TP-LINK TL-WN725N 微型150M无线USB网卡</p>
+                                    <p><span class="price" th:text="${#numbers.formatInteger((map['cy_price'] * map['cy_discount']*10)/10,3) }">￥138.00</span><span class="discount" th:text="${map['cy_price']}">￥1000</span></p>
+                                    <p class="label-default"><span th:text="${map['cy_discount']}"> 3.45 </span>折</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a class="yScrollListbtn yScrollListbtnr" id="next-01"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="news-list fr">
+        <div class="time-title time-clear"><h2>商城快讯</h2><a href="#" class="fr"> 更多资讯</a> </div>
+        <div class="time-border" style="border-left:none;">
+            <ul class="news" style="height: 140px;width: 305px;overflow: hidden; "   >
+                <li th:each="ujujuj:${session.mapNew}"><a href="selectNews" th:text="${ujujuj.getN_title()}">[特惠]洗护节 跨品牌满199减100</a> </li>
+            </ul>
+            <div class="time-poduse"><img src="theme/img/pd/pj1.png"></div>
+        </div>
+    </div>
+</div>
+<!-- 限时抢购 End -->
+
+<!-- 卖场推荐 begin -->
+<div class="container-c time-lists clearfix">
+    <div class="time-list fl">
+        <div class="time-title time-clear"><h2>卖场推荐</h2><a href="javascript:;" class="pc-spin fr" id="xx">换一换</a> </div>
+        <div class="time-poued clearfix" id="xo" >
+            <a th:each="mel :${session.mell}" th:href="@{discountProduct(cyid=${mel.get('cy_id')})}"><img th:src="@{${mel.get('p_image')}}" height="243" width="224"></a>
+        </div>
+    </div>
+    <div class="news-list fr">
+        <div class="time-title time-clear"><h2>今日值得购买</h2></div>
+        <div class="news-right"><a href="#"><img src="theme/img/ad/a1.png"></a></div>
+    </div>
+</div>
+<!-- 卖场推荐 End -->
+<script type="text/javascript" th:inline="javascript">
+    $(function(){
+        $("#H-table li").click(function(){
+            var id=$(this).children().attr("id");
+            $.post("asynTowPro","oc_id="+id,function(data){
+                var list=$.parseJSON(data);
+                $("#add").empty();
+                  for(var i in list) {
+                      var add = $(" <li>\n" +
+                          "                                <div class=\"brand-imgss\"><a href=\"#\"><img src="+list[i].p_image+" width='220' height='170'></a></div>\n" +
+                          "                                <div class=\"brand-title\"><a href=\"#\" >"+list[i].cy_name+"</a> </div>\n" +
+                          "                                <div class=\"brand-price\">￥"+list[i].cy_price+"</div>\n" +
+                          "                            </li>");
+                      $("#add").append(add);
+                  }
+            });
+        });
+        $("#H-table1 li").click(function(){
+            var id=$(this).children().attr("id");
+            $.post("asynTowPro2","oc_id="+id,function(data){
+                var list=$.parseJSON(data);
+                $("#addTow").empty();
+                for(var i in list) {
+                    var add = $(" <li>\n" +
+                        "                                <div class=\"brand-imgss\"><a href=\"#\"><img src="+list[i].p_image+" width='220' height='170'></a></div>\n" +
+                        "                                <div class=\"brand-title\"><a href=\"#\">"+list[i].cy_name+"</a> </div>\n" +
+                        "                                <div class=\"brand-price\">￥"+list[i].cy_price+"</div>\n" +
+                        "                            </li>");
+                    $("#addTow").append(add);
+                }
+            });
+        });
+       /* $("#H-table1 li").click(function(){
+            var id=$(this).children().attr("id")
+            $.post("asynTowPro2","oc_id="+id,function(data){
+
+            });
+        });*/
+        var pageNo=1;
+        $("#oo").click(function(){
+            var pages=[[${session.mapList2.getPages()}]];//获取总页数
+            if(pageNo<pages) {
+                ++pageNo;
+            }else{
+                pageNo=1;
+            }
+            $.post("hostSaleJson","pageNo="+pageNo,function(data){
+                var xo= $.parseJSON(data);
+                var ele=$("#ox");
+                ele.empty();
+                for (var i in xo) {
+                    var c=xo[i].cy_id;
+                    var img1=xo[i].p_image;
+                    var content=xo[i].cy_name;
+                    var sales=xo[i].cy_sales;
+                      var img=$(" <li>\n" +
+                                     "                                <a href=\"discountProduct(cyid="+c+")}\">\n" +
+                                     "                                    <img src="+img1+">\n" +
+                                     "                                    <p class=\"head-name pc-pa10\">"+content+"</p>\n" +
+                                     "                                    <span style=\"float: left;\">销量:</span><p class=\"label-default\" style=\"width: 120px;\"> "+sales+"</p>\n" +
+                                     "                                </a>\n" +
+                                     "                            </li>");
+                                 ele.append(img);
+
+                }
+            })
+        });
+    })
+
+</script>
+<div class="time-lists clearfix">
+    <div class="time-list time-list-w fl">
+        <div class="time-title time-clear"><h2>热卖区</h2><div class="pc-font fl"></div><a class="pc-spin fr" href="javascript:;" id="oo">换一换</a> </div>
+        <div class="time-border">
+            <div class="yScrollList">
+                <div class="yScrollListIn">
+                    <div style="display:block;" class="yScrollListInList yScrollListInList1">
+                        <ul id="ox">
+                            <li th:each="map:${session.mapList2 }">
+                                <a th:href="@{discountProduct(cyid=${map['cy_id']})}">
+                                    <img th:src="@{${map.get('p_image')}}" height="140" width="140">
+                                    <p class="head-name pc-pa10" th:text="${map['cy_name']}">TP-LINK TL-WN725N 微型150M无线USB网卡</p>
+                                    <span style="float: left;">销量:</span><p class="label-default" style="width: 120px;"> [[${map.cy_sales}]]</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="containers main-banner"><a href="#"><img src="theme/img/ad/br1.jpg" width="1200" height="105"></a> </div>
+
+<div class="time-lists  clearfix">
+    <div class="time-list time-list-w fl">
+        <div class="time-title time-clear-f"><h2>服装鞋帽</h2>
+            <ul class="brand-tab H-table clearfix fr" id="H-table">
+                <li class="cur"><a href="javascript:void(0);" class="cur" id="16">男装</a></li>
+                <li><a href="javascript:void(0);" id="23">女装</a></li>
+                <li><a href="javascript:void(0);" id="17">鞋靴</a></li>
+                <li><a href="javascript:void(0);" id="18">箱包</a></li>
+                <li><a href="javascript:void(0);" id="19">内衣配饰</a></li>
+                <li><a href="javascript:void(0);" id="20">珠宝首饰</a></li>
+                <li><a href="javascript:void(0);" id="21">奢品礼品</a></li>
+                <li><a href="javascript:void(0);" id="22">奢华腕表</a></li>
+            </ul>
+        </div>
+        <div class="time-border time-border-h clearfix">
+            <div class="brand-img fl">
+                <ul>
+      <!--品牌-->
+                    <li th:each="falt :${session.flats}"><a href="#"><img th:src="${falt.getF_image()}" width="125" height="47"></a></li>
+                </ul>
+            </div>
+            <div class="brand-bar fl"><a href="#"><img src="theme/img/ad/bar.jpg" width="300" height="476"></a> </div>
+            <div class="brand-poa fl">
+                <div class="brand-poa H-over clearfix">
+                    <ul id="add">
+                            <li th:each="pro :${session.laceTowPro}">
+                                <div class="brand-imgss"><a href="#"><img th:src="${pro.get('p_image')}" width='220' height='170'/></a></div>
+                                <div class="brand-title"><a href="#" th:text="${pro.get('cy_name')}">罗莱家纺 暖融二合一羊毛蚕丝被 床上用品一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被</a> </div>
+                                <div class="brand-price">￥[[${pro.cy_price}]] </div>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="time-lists  clearfix">
+    <div class="time-list time-list-w fl">
+        <div class="time-title time-clear-f2"><h2>美容护肤</h2>
+            <ul class="brand-tab H-table1 clearfix fr" id="H-table1">
+                <li class="cur"><a href="javascript:void(0);" id="16">男装</a></li>
+                <li><a href="javascript:void(0);" id="25">女装</a></li>
+                <li><a href="javascript:void(0);" id="26">鞋靴</a></li>
+                <li><a href="javascript:void(0);" id="27">箱包</a></li>
+                <li><a href="javascript:void(0);" id="28">内衣配饰</a></li>
+                <li><a href="javascript:void(0);" id="29">珠宝首饰</a></li>
+                <li><a href="javascript:void(0);" id="30">奢品礼品</a></li>
+                <li><a href="javascript:void(0);" id="31">奢华腕表</a></li>
+            </ul>
+        </div>
+        <div class="time-border time-border-h clearfix">
+            <div class="brand-img fl">
+                <ul>
+                    <li th:each="falt :${session.flats2}" ><a href="#"><img th:src="${falt.getF_image()}" width="125" height="47"></a></li>
+                </ul>
+            </div>
+            <div class="brand-bar fl"><a href="#"><img src="theme/img/ad/bar1.jpg" width="300" height="476" style="border: none;"></a> </div>
+            <div class="brand-poa fl">
+                <div class="brand-poa H-over1 clearfix">
+                    <ul id="addTow">
+                        <li th:each="pro :${session.makeTowPro}">
+                            <div class="brand-imgss"><a href="#"><img th:src="${pro.get('p_image')}" width='220' height='170'/></a></div>
+                            <div class="brand-title"><a href="#" th:text="${pro.get('cy_name')}">罗莱家纺 暖融二合一羊毛蚕丝被 床上用品一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被</a> </div>
+                            <div class="brand-price">￥[[${pro.cy_price}]] </div>
+                        </li>
+                    </ul>
+                </div>
+              <!--  <div class="brand-poa H-over1 clearfix" style="display:none;">
+                    <ul>
+                        <li>
+                            <div class="brand-imgss"><a href="#"><img src="theme/img/pd/bar1.png"></a></div>
+                            <div class="brand-title"><a href="#">22罗莱家纺 暖融二合一羊毛蚕丝被 床上用品一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被</a> </div>
+                            <div class="brand-price">￥5999.00 </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="brand-poa H-over1 clearfix" style="display:none;">
+                    <ul>
+                        <li>
+                            <div class="brand-imgss"><a href="#"><img src="theme/img/pd/bar1.png"></a></div>
+                            <div class="brand-title"><a href="#">33罗莱家纺 暖融二合一羊毛蚕丝被 床上用品一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被一羊毛蚕丝被</a> </div>
+                            <div class="brand-price">￥5999.00 </div>
+                        </li>
+                    </ul>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="containers main-banner"><a href="#"><img src="theme/img/ad/br1.jpg" width="1200" height="105"></a> </div>
+
+<!--<div class="time-lists clearfix">-->
+    <!--<div class="time-list fl">-->
+        <!--<div class="time-title time-clear"><h2>好店推荐 </h2></div>-->
+        <!--<div class="time-border time-border-h clearfix">-->
+            <!--<div class="fl shop-img">-->
+                <!--<div class="shop-title"><a href="#"><img src="img/ad/shop1.png"></a></div>-->
+                <!--<div class="shop-text"><h2>熊太子坚果炒货金冠店铺...</h2> <p>[正品 有赠品 如实描述]</p></div>-->
+                <!--<div class="shop-work clearfix"><a href="#"><img src="img/ad/shop2.png"></a><a href="#"><img src="img/ad/shop3.png"></a> </div>-->
+            <!--</div>-->
+            <!--<div class="shop-bar clearfix fl">-->
+                <!--<ul>-->
+                    <!--<li>-->
+                        <!--<div class="shop-icn"><a href="#"><img src="img/ad/shop4.png"></a></div>-->
+                        <!--<div class="shop-tex"><a href="#">阿迪王品牌店铺</a> </div>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<div class="shop-icn"><a href="#"><img src="img/ad/shop4.png"></a></div>-->
+                        <!--<div class="shop-tex"><a href="#">阿迪王品牌店铺</a> </div>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<div class="shop-icn"><a href="#"><img src="img/ad/shop4.png"></a></div>-->
+                        <!--<div class="shop-tex"><a href="#">阿迪王品牌店铺</a> </div>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<div class="shop-icn"><a href="#"><img src="img/ad/shop4.png"></a></div>-->
+                        <!--<div class="shop-tex"><a href="#">阿迪王品牌店铺</a> </div>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<div class="shop-icn"><a href="#"><img src="img/ad/shop4.png"></a></div>-->
+                        <!--<div class="shop-tex"><a href="#">阿迪王品牌店铺</a> </div>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<div class="shop-icn"><a href="#"><img src="img/ad/shop4.png"></a></div>-->
+                        <!--<div class="shop-tex"><a href="#">阿迪王品牌店铺</a> </div>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="news-list fr">-->
+        <!--<div class="time-title time-clear"><h2>店铺销量top排行</h2></div>-->
+        <!--<div style="border-left:none;" class="time-border time-border-h">-->
+            <!--<ul class="shop-top">-->
+                <!--<li class="clearfix">-->
+                    <!--<div class="shop-name fl"><a href="#"><img src="img/ad/top1.png"></a></div>-->
+                    <!--<div class="shop-titl fl"><p><b>NO.1 阿卡官方旗舰店</b></p> <p>梦想会喜欢 <span class="fr red">已售出：3000+</span></p> </div>-->
+                <!--</li>-->
+                <!--<li class="clearfix">-->
+                    <!--<div class="shop-name fl"><a href="#"><img src="img/ad/top1.png"></a></div>-->
+                    <!--<div class="shop-titl fl"><p><b>NO.1 阿卡官方旗舰店</b></p> <p>梦想会喜欢 <span class="fr red">已售出：3000+</span></p> </div>-->
+                <!--</li>-->
+                <!--<li class="clearfix">-->
+                    <!--<div class="shop-name fl"><a href="#"><img src="img/ad/top1.png"></a></div>-->
+                    <!--<div class="shop-titl fl"><p><b>NO.1 阿卡官方旗舰店</b></p> <p>梦想会喜欢 <span class="fr red">已售出：3000+</span></p> </div>-->
+                <!--</li>-->
+                <!--<li class="clearfix">-->
+                    <!--<div class="shop-name fl"><a href="#"><img src="img/ad/top1.png"></a></div>-->
+                    <!--<div class="shop-titl fl"><p><b>NO.1 阿卡官方旗舰店</b></p> <p>梦想会喜欢 <span class="fr red">已售出：3000+</span></p> </div>-->
+                <!--</li>-->
+                <!--<li class="clearfix">-->
+                    <!--<div class="shop-name fl"><a href="#"><img src="img/ad/top1.png"></a></div>-->
+                    <!--<div class="shop-titl fl"><p><b>NO.1 阿卡官方旗舰店</b></p> <p>梦想会喜欢 <span class="fr red">已售出：3000+</span></p> </div>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<!--<section>-->
+    <!--&lt;!&ndash;<div class="time-lists clearfix">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="time-list time-list-w fl">&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="time-title time-clear"><h2>悦帮派</h2></div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="time-border time-border-h clearfix">&ndash;&gt;-->
+                <!--&lt;!&ndash;<div class="fl shop-img">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="shop-hgou"><h3>新手上路</h3></div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="shop-help clearfix">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<ul>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><a href="#">开店指南</a> </li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><a href="#">购物流程</a> </li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><a href="#">交易安全</a> </li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><a href="#">常见问题</a> </li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><a href="#">联系客服</a> </li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><a href="#">用户协议</a> </li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="shop-re"><a href="#"><img src="img/ad/shop5.png"></a> </div>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;<div class="shop-bar shop-bar-w clearfix fl">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="shop-dan clearfix"><h3 class="fl">悦用户晒单</h3> <a href="#" class="fr">更多晒单</a> </div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="clearfix" style="width:980px;">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="shop-fl fl">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-work clearfix"><a href="#"><img src="img/ad/shop2.png"></a><a href="#"><img src="img/ad/shop3.png"></a> </div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="clearfix"><div class="shop-name fl"><a href="#"><img src="icon/shop-user.png"></a></div><div class=" fl"><p>搜悦用户</p> <p>2015-5-24 <em>11:25</em></p> </div></div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-sun"><p>晒单内容:</p> <p>物美价廉，挺好的，物流超快.很不错，下次继续来</p> <p class="shop-see"><a href="#">查看商品</a> </p> </div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="shop-fl fl">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-work clearfix"><a href="#"><img src="img/ad/shop2.png"></a><a href="#"><img src="img/ad/shop3.png"></a> </div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="clearfix"><div class="shop-name fl"><a href="#"><img src="icon/shop-user.png"></a></div><div class=" fl"><p>搜悦用户</p> <p>2015-5-24 <em>11:25</em></p> </div></div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-sun"><p>晒单内容:</p> <p>物美价廉，挺好的，物流超快.很不错，下次继续来</p> <p class="shop-see"><a href="#">查看商品</a> </p> </div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="shop-fl fl">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-work clearfix"><a href="#"><img src="img/ad/shop2.png"></a><a href="#"><img src="img/ad/shop3.png"></a> </div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="clearfix"><div class="shop-name fl"><a href="#"><img src="icon/shop-user.png"></a></div><div class=" fl"><p>搜悦用户</p> <p>2015-5-24 <em>11:25</em></p> </div></div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-sun"><p>晒单内容:</p> <p>物美价廉，挺好的，物流超快.很不错，下次继续来</p> <p class="shop-see"><a href="#">查看商品</a> </p> </div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="shop-fl fl">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-work clearfix"><a href="#"><img src="img/ad/shop2.png"></a><a href="#"><img src="img/ad/shop3.png"></a> </div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="clearfix"><div class="shop-name fl"><a href="#"><img src="icon/shop-user.png"></a></div><div class=" fl"><p>搜悦用户</p> <p>2015-5-24 <em>11:25</em></p> </div></div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-sun"><p>晒单内容:</p> <p>物美价廉，挺好的，物流超快.很不错，下次继续来</p> <p class="shop-see"><a href="#">查看商品</a> </p> </div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="shop-fl fl">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-work clearfix"><a href="#"><img src="img/ad/shop2.png"></a><a href="#"><img src="img/ad/shop3.png"></a> </div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="clearfix"><div class="shop-name fl"><a href="#"><img src="icon/shop-user.png"></a></div><div class=" fl"><p>搜悦用户</p> <p>2015-5-24 <em>11:25</em></p> </div></div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="shop-sun"><p>晒单内容:</p> <p>物美价廉，挺好的，物流超快.很不错，下次继续来</p> <p class="shop-see"><a href="#">查看商品</a> </p> </div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--</section>-->
+
+
+
+
+
+
+<div class="aui-footer-bot">
+    <div class="time-lists aui-footer-pd clearfix">
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d1.png"></span>
+                <em>消费者权益</em>
+            </h4>
+            <ul>
+                <li><a href="#">保障范围 </a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d2.png"></span>
+                <em>新手上路</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d3.png"></span>
+                <em>保障正品</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d1.png"></span>
+                <em>消费者权益</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+    </div>
+    <div style="border-bottom:1px solid #dedede"></div>
+    <div class="time-lists aui-footer-pd time-lists-ls clearfix">
+        <div class="aui-footer-list clearfix">
+            <h4>购物指南</h4>
+            <ul>
+                <li><a href="#">保障范围 </a> </li>
+                <li><a href="#">购物流程</a> </li>
+                <li><a href="#">会员介绍 </a> </li>
+                <li><a href="#">生活旅行</a> </li>
+                <li><a href="#"> 常见问题 </a> </li>
+                <li><a href="#"> 联系客服购物指南 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>特色服务</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>帮助中心</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>新手指导</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $(function(){
+    banner();
+    var pageNo=1;
+    $("#xx").click(function(){
+        var pages=[[${session.mell.getPages()}]];//获取总页数
+        if(pageNo<pages) {
+            ++pageNo;
+        }else{
+            pageNo=1;
+        }
+        $.post("recommend2","pageNo="+pageNo,function(data){
+            var xo= $.parseJSON(data);
+            var ele=$("#xo");
+                ele.empty();
+            for (var i in xo) {
+                /*alert(xo[i].oc_name);*/
+                var img=$("<a href=\"#\"><img src="+xo[i].p_image+" height=\"243\" width=\"224\"></a>");
+                ele.append(img);
+            }
+        })
+    });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+	<meta charset="UTF-8">
+	<meta name="Generator" content="EditPlus®">
+	<meta name="Author" content="">
+	<meta name="Keywords" content="">
+	<meta name="Description" content="">
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"> 
+	<meta name="renderer" content="webkit">
+	<title>提交订单</title>
+    <link rel="shortcut icon" type="image/x-icon" href="theme/icon/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="theme/css/base.css">
+	<link rel="stylesheet" type="text/css" href="theme/css/home.css">
+     <link rel="stylesheet" type="text/css" href="theme/css/test.css">
+     <script src="theme/lib/jquery/1.9.1/jquery.min.js"></script>
+     <script type="text/javascript" src="theme/js/jquery.js"></script>
+     <script src="theme/lib/layer/2.4/layer.js"></script>
+
+    <script type="text/javascript"  th:inline="javascript">
+         (function(a){
+             a.fn.hoverClass=function(b){
+                 var a=this;
+                 a.each(function(c){
+                     a.eq(c).hover(function(){
+                         $(this).addClass(b)
+                     },function(){
+                         $(this).removeClass(b)
+                     })
+                 });
+                 return a
+             };
+         })(jQuery);
+
+         $(function(){
+             $("#pc-nav").hoverClass("current");
+         });
+         $(document).ready(function($){
+             /**
+              * 修改样式
+              * */
+             $(".hin1x").click(function(event){
+                 //修改显示
+                 var u_name=[[${dftSite?.u_name}]];
+                 var address=[[${dftSite?.s_d_address}]];
+                 var phone=[[${dftSite?.u_phone}]];
+                 var email=[[${dftSite?.u_email}]];
+                 $("#Uname").val(u_name);
+                 $("#Uaddress").val(address);
+                 $("#Uphone").val(phone);
+                 $("#Uemail").val(email);
+                 $(".hintx").css({"display":"block"});
+                 $(".boxx").css({"display":"block"});
+             });
+             $(".hint-in3x").click(function(event) {
+                 //修改地址
+                 var u_name=$("#Uname").val();
+                var u_address= $("#Uaddress").val();
+                 var uphone=$("#Uphone").val();
+                 var uemail=$("#Uemail").val();
+                 var provi=$("#province").val();
+                 var city=$("#city").val();
+                 var district=$("#district").val();
+                 var s_id=$("#s_id").val();//地址编号
+                 /**/
+                 var reg=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;//邮箱正则
+                 var regphone=/^1(3|4|5|7|8)\d{9}$/;//电话正则
+                 if(u_name==null||u_name==""){
+                     layer.msg('请输入收货人!', {icon: 2, time: 1000});
+                 }else if(provi==null||provi==""||district==null||district==""||city==null||city==""){
+                     layer.msg('所在地区不能为空!', {icon: 2, time: 1000});
+                 }else if(u_address==null||u_address==""){
+                     layer.msg('详细地址不能为空!', {icon: 2, time: 1000});
+                 }else if(!regphone.test(uphone)) {
+                     layer.msg('电话格式错误!', {icon: 2, time: 1000});
+                 }else if(!reg.test(uemail)){
+                     layer.msg('邮箱格式错误!', {icon: 2, time: 1000});
+                 }else {
+                     //修改地址
+                     var list = new Array();
+                     list[0] = u_name;
+                     list[1] = provi +" "+ city +" "+ district;
+                     list[2] = u_address;
+                     list[3] = uphone;
+                     list[4] = uemail;
+                     list[5] = s_id;
+                     $.post("/updateSite", "lists=" + list, function (data) {
+                         if (data == "y") {
+                             //修改成功,不做操作
+                             layer.msg('修改成功!', {icon: 1, time: 1000},function(){
+                                 window.location.reload();
+                             });
+                         } else {
+                             layer.msg('修改失败!', {icon: 2, time: 1000});
+                         }
+
+                     });
+                     $(".hintx").css({"display": "none"});
+                     $(".boxx").css({"display": "none"});
+                 }
+             });
+             $(".hint3x").click(function(event) {
+                 //关闭修改
+                 $(this).parent().parent().css({"display":"none"});
+                 $(".boxx").css({"display":"none"});
+             });
+             $(".btn1").click(function(event){
+                 //添加显示
+                 $(".hint").css({"display":"block"});
+                 $(".box").css({"display":"block"});
+             });
+
+             /*添加样式*/
+             $(".hint-in3").click(function(event) {
+                 var sname=$("#Sname").val();//收货人
+                 var province=$("#province1").val();//省
+                 var city=$("#city1").val();//市
+                 var district=$("#district1").val();//区
+                 var siteinfo=$("#siteInfo").val();//详细地址
+                 var phone= $("#phone").val();//电话
+                 var email=$("#email").val();//邮箱
+                 var reg=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;//邮箱正则
+                 var regphone=/^1(3|4|5|7|8)\d{9}$/;//电话正则
+                 if(sname==null||sname==""){
+                     layer.msg('请输入收货人!', {icon: 2, time: 1000});
+                 }else if(province==null||province==""||district==null||district==""||city==null||city==""){
+                     layer.msg('所在地区不能为空!', {icon: 2, time: 1000});
+                 }else if(siteinfo==null||siteinfo==""){
+                     layer.msg('详细地址不能为空!', {icon: 2, time: 1000});
+                 }else if(!regphone.test(phone)) {
+                     layer.msg('电话格式错误!', {icon: 2, time: 1000});
+                 }else if(!reg.test(email)){
+                      layer.msg('邮箱格式错误!', {icon: 2, time: 1000});
+                  }else{
+                     //添加地址
+                     var list= new Array();
+                     list[0]=sname;
+                     list[1]=province+" "+city+" "+district;
+                     list[2]=siteinfo;
+                     list[3]=phone;
+                     list[4]=email;
+                     $.post("/addSite","lists="+list,function(data){
+                         if(data=="y"){
+                                   //添加成功,不做操作
+                             window.location.reload();
+                         }else{
+                             layer.msg('添加失败!', {icon: 2, time: 1000});
+                         }
+
+                     });
+                     $(".hint").css({"display": "none"});
+                     $(".box").css({"display": "none"});
+                 }
+             });
+             $(".hint3").click(function(event) {
+                 //添加关闭
+                 $(this).parent().parent().css({"display":"none"});
+                 $(".box").css({"display":"none"});
+             });
+             $("#H-table li").each(function(i){
+                 $(this).click((function(k){
+                     var _index = k;
+                     return function(){
+                         $(this).addClass("cur").siblings().removeClass("cur");
+                         $(".H-over").hide();
+                         $(".H-over:eq(" + _index + ")").show();
+                     }
+                 })(i));
+             });
+             /*地址删除*/
+            $("#delSite").click(function(){
+                layer.confirm('确认要删除吗？', function (index) {
+                    var s_id=$("#s_id").val();//要删除的地址编号
+                    if(!s_id==""){
+                            $.post("/delSite","s_id="+s_id,function(data){
+                                        if(data=="y"){
+                                                    //删除成功
+                                            layer.msg('删除成功!', {icon: 1, time: 1000},function(){
+                                                window.location.reload();
+                                            });
+                                        }else{
+                                            layer.msg('删除成功!', {icon: 2, time: 1000},function() {
+                                                window.location.reload();
+                                            });
+                                        }
+                            });
+                    }else{
+                        layer.msg('请先添加地址!', {icon: 2, time: 1000});
+                    }
+                layer.close(index);
+                });
+            });
+
+         });
+     </script>
+     <script src="theme/js/distpicker.data.js"></script>
+     <script src="theme/js/distpicker.js"></script>
+
+
+ </head>
+ <body>
+<!--添加收货地址-->
+<div class="box">
+    <div class="hint">
+        <div class="hint-in1">
+            <div class="hint2">添加收货地址</div>
+            <div class="hint3"></div>
+        </div>
+        <div class="pc-label"><label><i class="reds ">*</i>收货人:</label><input type="text" placeholder="请您填写收货人姓名" id="Sname"></div>
+        <div id="sjld" style="margin-top:10px; padding-left:40px; position:relative;" class="clearfix" data-toggle="distpicker">
+
+            <div class="clearfix" style="padding-bottom:5px;"><i class="reds fl">*</i><p class="fl">所在地区:</p></div>
+
+            <div class="m_zlxgx" id="shenfen" >
+                <select class="form-control" id="province1"></select>
+                <div class="m_zlxg2x">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="m_zlxgx" id="chengshi" STYLE="margin: 0px 20px 0px 40px;">
+                <select class="form-control" id="city1"></select>
+                <div class="m_zlxg2x">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="m_zlxgx" id="quyu">
+                <select class="form-control" id="district1"></select>
+                <div class="m_zlxg2x">
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+        <div class="pc-label"><label><i class="reds ">*</i>详细地址:</label><input type="text" style="width:400px; " placeholder="请您填写收货人详细地址" id="siteInfo"></div>
+        <div class="pc-label"><label><i class="reds ">*</i>手机号码:</label><input type="text" style="width:400px;"placeholder="请您填写收货人手机号码" id="phone"></div>
+        <div class="pc-label"><label>邮箱:</label><input type="email" style="width:400px;" placeholder="请您填写邮箱地址" id="email"></div>
+        <a href="javascript:;" class="hint-in3">保存收货地址</a>
+    </div>
+</div>
+<!--修改-->
+<div class="boxx">
+    <div class="hintx">
+        <div class="hint-in1x">
+            <div class="hint2x">修改收货地址</div>
+            <div class="hint3x"></div>
+        </div>
+        <div class="pc-labelx"><label><i class="reds ">*</i>收货人:</label><input type="text" placeholder="请您填写收货人姓名" id="Uname"></div>
+        <div id="sjld" style="margin-top:10px; padding-left:40px; position:relative;" class="clearfix" data-toggle="distpicker">
+
+            <div class="clearfix" style="padding-bottom:5px;"><i class="reds fl">*</i><p class="fl">所在地区:</p></div>
+
+            <div class="m_zlxgx" id="Ushenfen" >
+                <select class="form-control" id="province"></select>
+                <div class="m_zlxg2x">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="m_zlxgx" id="Uchengshi" STYLE="margin: 0px 20px 0px 40px;">
+                <select class="form-control" id="city"></select>
+                <div class="m_zlxg2x">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="m_zlxgx" id="Uquyu">
+                <select class="form-control" id="district"></select>
+                <div class="m_zlxg2x">
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="pc-labelx"><label><i class="reds ">*</i>详细地址:</label><input type="text" style="width:400px; " placeholder="请您填写收货人详细地址" id="Uaddress"></div>
+        <div class="pc-labelx"><label><i class="reds ">*</i>手机号码:</label><input type="text" style="width:400px;"placeholder="请您填写收货人手机号码" id="Uphone"></div>
+        <div class="pc-labelx"><label>邮箱:</label><input type="text" style="width:400px;" placeholder="请您填写邮箱地址" id="Uemail"></div>
+        <a href="javascript:;" class="hint-in3x">确认修改地址</a>
+    </div>
+</div>
+<!--- header begin-->
+<header id="pc-header">
+    <div class="BHeader">
+        <div class="yNavIndex">
+            <ul class="BHeaderl">
+                <li><a href="#">登录</a> </li>
+                <li class="headerul">|</li>
+                <li><a href="#">订单查询</a> </li>
+                <li class="headerul">|</li>
+                <li><a href="#">我的收藏</a> </li>
+                <li class="headerul">|</li>
+                <li id="pc-nav" class="menu"><a href="#" class="tit">我的商城</a>
+                    <div class="subnav">
+                        <a href="#">我的山城</a>
+                        <a href="#">我的山城</a>
+                        <a href="#">我的山城</a>
+                    </div>
+                </li>
+                <li class="headerul">|</li>
+                <li><a href="#" class="M-iphone">手机悦商城</a> </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container clearfix">
+        <div class="header-logo fl" style="width:212px;"><h1><a href="#"><img src="theme/icon/logo.png"></a></h1></div>
+        <div class="pc-order-titlei fl"><h2>填写订单</h2></div>
+        <div class="pc-step-title fl">
+            <ul>
+                <li class="cur2"><a href="#">1 . 我的购物车</a></li>
+                <li class="cur"><a href="#">2 . 填写核对订单</a></li>
+                <li><a href="#">3 . 成功提交订单</a></li>
+            </ul>
+        </div>
+    </div>
+
+</header>
+<!-- header End -->
+
+
+<!-- 订单提交成功 begin-->
+<section>
+    <div class="containers">
+       <div class="pc-space">
+           <div class="pc-order-title clearfix"><h3 class="fl">收货人信息</h3> <a href="#" class="fr pc-order-add btn1">新增收货地址</a> </div>
+           <div class="pc-border">
+               <div class="pc-order-text clearfix">
+                   <ul class=" clearfix">
+                       <div th:if="${dftSite ne null}">
+                       <li class="clearfix fl">
+                           <div class="fl pc-frame pc-frams"> <a href="#">默认地址</a></div>
+                           <div class="fl pc-address"><span>[[${dftSite.u_name}]]</span> <span>[[${dftSite.u_phone}]]</span> <span>[[${dftSite.s_region}]][[${dftSite.s_d_address}]]</span></div>
+                       </li>
+                       <li class="fr">
+                           <div class="pc-click"><a href="#"></a> <a href="#" class="hin1x">编辑</a> <a href="#" id="delSite">删除</a> </div>
+                       </li>
+                       </div>
+                       <div th:if="${dftSite eq null}">
+                           <li class="clearfix fl">
+                               <div class="fl pc-frame pc-frams"> <a href="#">请填写地址</a></div>
+                           </li>
+                       </div>
+                       <input type="text" hidden="hidden" th:if="${dftSite ne null}" th:value="${dftSite.s_id}"name="hidden" id="s_id" />
+                       <input type="text" hidden="hidden" th:if="${dftSite ne null}" th:value="${dftSite.s_region}"name="hidden" id="s_region" />
+                   </ul>
+               </div>
+           </div>
+       </div>
+       <div class="pc-space">
+            <div class="pc-order-title clearfix"><h3 class="fl">支付方式</h3></div>
+            <div class="pc-border">
+                <div class="pc-order-text clearfix">
+                    <ul class=" clearfix">
+                        <li class="clearfix fl">
+                            <div class="fl pc-frame pc-frams"> <a href="#" id="2" name="pay"> 在线支付</a></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+       <div class="pc-space clearfix">
+           <div class="fl ">
+               <div class="pc-order-title clearfix"><h3 class="fl">快递信息</h3></div>
+               <div class="fr pc-border">
+                   <div class="pc-order-text pc-order-l clearfix">
+                       <ul id="H-table" class="clearfix H-table" >
+                           <li class="cur">
+                               <a href="javascript:void(0);">百事汇通</a>
+                           </li>
+                           <li>
+                               <a href="javascript:void(0);">顺风快递</a>
+                           </li>
+                           <li>
+                              <a href="javascript:void(0);">中通快递</a>
+                           </li>
+                       </ul>
+                       <div class="" style="height:211px; text-align: center;">
+                           <div style="height:140px; padding-top: 50px;" class="H-over"><img src="theme/icon/baishi.jpg" width=320px height=140px></div>
+                           <div style="height:140px; padding-top: 40px; display: none;" class="H-over"><img src="theme/icon/shunfeng.jpg" width=320px height=140px></div>
+                           <div style="height:140px; padding-top: 40px; display: none;" class="H-over"><img src="theme/icon/zhongtong.png" width=320px height=140px></div>
+                       </div>
+                       <div class="pc-line"></div>
+                       <div class="pc-freight"><p>运费：  8.00元</p></div>
+                   </div>
+               </div>
+           </div>
+           <div class="fr ">
+               <div class="pc-order-title clearfix"><h3 class="fl">商品信息</h3></div>
+               <div class="pc-border">
+                   <div class="pc-order-text clearfix" style="overflow: auto;width:620px ;height:280px ;">
+                       <!--<div class="pc-wares-t"><h4>商家：  阿卡官方旗舰店</h4></div>-->
+                       <div class="clearfix pc-wares-p" th:each="sp :${session.sp_list}">
+                           <div class="fl pc-wares" ><a href="#"><img src="theme/img/pd/pc1.png"></a></div>
+                           <div class="fl pc-wares-w" style="width: 400px;"> <a href="#">[[${sp.cy_introduction}]]</a> <p class="clearfix"><span class="fl" name="price">￥[[${sp.cy_price}]]</span><span class="fr" name="sp_quantity">x[[${sp.sp_quantity}]]</span></p></div>
+                           <div class="fl pc-wares-s" ></div>
+                       </div>
+                       <!--<div class="pc-written"><p>&lt;!&ndash;订单留言&ndash;&gt;</p></div>-->
+                   </div>
+               </div>
+           </div>
+       </div>
+       <div class="pc-space">
+            <div class="pc-order-title clearfix"><h3 class="fl">发票信息</h3></div>
+            <div class="pc-border">
+                <div class="pc-order-text clearfix">
+                    <ul class=" clearfix">
+                        <li class="clearfix fl">
+                            <div class="fl pc-address pc-wares-l"><span>普通发票（纸质）</span> <span> 个人</span> <span>明细</span><span><a href="#">修改</a> </span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+       <div class="clearfix">
+           <div class="fr pc-list-t">
+               <ul>
+                   <li><span><b id="count">2</b> 件商品，总商品金额：</span> <em id="sumPrice">￥558.00</em></li>
+                   <li><span>运费：</span> <em>￥8.00</em></li>
+               </ul>
+           </div>
+       </div>
+       <div class="pc-space-n"></div>
+       <div class="clearfix">
+           <div class="fr pc-space-j">
+               <spna>应付总额：<strong id="countPrice">￥558.00</strong></spna>
+               <button class="pc-submit">提交订单</button>
+           </div>
+       </div>
+    </div>
+</section>
+<!-- 订单提交成功 End-->
+
+
+<!--- footer begin-->
+<div class="aui-footer-bot">
+    <div class="time-lists aui-footer-pd clearfix">
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d1.png"></span>
+                <em>消费者权益</em>
+            </h4>
+            <ul>
+                <li><a href="#">保障范围 </a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d2.png"></span>
+                <em>新手上路</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d3.png"></span>
+                <em>保障正品</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d1.png"></span>
+                <em>消费者权益</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+    </div>
+    <div style="border-bottom:1px solid #dedede"></div>
+    <div class="time-lists aui-footer-pd time-lists-ls clearfix">
+        <div class="aui-footer-list clearfix">
+            <h4>购物指南</h4>
+            <ul>
+                <li><a href="#">保障范围 </a> </li>
+                <li><a href="#">购物流程</a> </li>
+                <li><a href="#">会员介绍 </a> </li>
+                <li><a href="#">生活旅行</a> </li>
+                <li><a href="#"> 常见问题 </a> </li>
+                <li><a href="#"> 联系客服购物指南 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>特色服务</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>帮助中心</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>新手指导</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">退货退款流程</a> </li>
+                <li><a href="#">服务中心 </a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#">服务中心</a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+                <li><a href="#"> 更多特色服务 </a> </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- footer End -->
+<script type="text/javascript" src="theme/js/address.js"></script>
+<script type="text/javascript"  th:inline="javascript">
+    $(function(){
+        $("#distpicker").distpicker('destroy');
+        $("#distpicker").distpicker({
+            province: '省份名',
+            city: '城市名',
+            district: '区名',
+            autoSelect: true,
+            placeholder: false
+        });
+        //省市级联回显
+        var site =$("#s_region").val();
+        var sites=site.split(' ');
+        $("#province").val(sites[0]);//省
+        $("#province").trigger("change");
+        $("#city").val(sites[1]);
+        $("#city").trigger("change");
+        $("#district").val(sites[2]);
+        //计算总价格和商品数量
+        var price=$("[name='price']");
+        var sp_quantity=$("[name='sp_quantity']");
+        var newprice=0;
+        var quantity=0;
+        for(var i=0;i<price.length;i++){
+            newprice+=Number($(price[i]).html().substring(1))*Number($(sp_quantity[i]).html().substring(1));
+            quantity+=Number($(sp_quantity[i]).html().substring(1));
+        }
+        $("#count").html(quantity);
+        $("#sumPrice").html(newprice);
+        var countPrice=newprice+8;
+        $("#countPrice").html("￥"+countPrice);
+        //提交订单
+        $(".pc-submit").click(function(){
+            var pay=$("[name='pay']").attr("id");//在线支付
+            var u_name=[[${dftSite?.u_name}]];//用户名字
+            var u_phone=[[${dftSite?.u_phone}]];//用户电话
+            var s_region=[[${dftSite?.s_region}]];//省市区
+            var s_d_address=[[${dftSite?.s_d_address}]];//详细地址
+            var countPrice=$("#countPrice").html().substring(1);//购买的商品总价
+            var list=new Array();
+            list[0]=pay;
+            list[1]=u_name;
+            list[2]=u_phone;
+            list[3]=s_region;
+            list[4]=s_d_address;
+            list[5]=countPrice;
+            window.location="/addOrders?lists="+list;
+        });
+    });
+</script>
+</body>
+</html>

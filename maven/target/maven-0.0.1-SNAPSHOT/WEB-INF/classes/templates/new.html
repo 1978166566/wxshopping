@@ -1,0 +1,352 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+    <meta name="renderer" content="webkit">
+    <meta content="歪秀购物, 购物, 大家电, 手机" name="keywords">
+    <meta content="歪秀购物，购物商城。" name="description">
+    <title>会员系统帮助中心</title>
+    <link rel="shortcut icon" type="image/x-icon" href="theme/icon/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="theme/css/base.css">
+    <link rel="stylesheet" type="text/css" href="theme/css/member.css">
+    <script type="text/javascript" src="theme/js/jquery.js"></script>
+    <script type="text/javascript">
+        (function (a) {
+            a.fn.hoverClass = function (b) {
+                var a = this;
+                a.each(function (c) {
+                    a.eq(c).hover(function () {
+                        $(this).addClass(b)
+                    }, function () {
+                        $(this).removeClass(b)
+                    })
+                });
+                return a
+            };
+        })(jQuery);
+
+        $(function () {
+            $("#pc-nav").hoverClass("current");
+            //点击之后根据关键字查询
+            $(".button-btn").click(function(){
+                $("#ajaxRequest").html("");
+                var value=$(".text-news").val();
+                $.ajax({
+                    type: 'POST', //发送是以POST还是GET
+                    url: "selectByName", //发送的地址
+                    dataType: "json", //传输数据的格式
+                    data: {
+                        vaa: value
+                    },
+                    success: function (data) {
+                        var li="";
+                        for(var i=0;i<data.length;i++){
+                            var year=new Date(data[i].n_time).getFullYear();
+                            var month=new Date(data[i].n_time).getMonth();
+                            var day=new Date(data[i].n_time).getDay();
+                            var hou=new Date(data[i].n_time).getHours();
+                            var min=new Date(data[i].n_time).getMinutes();
+                            var se=new Date(data[i].n_time).getSeconds();
+                            var time=year+"/"+month+"/"+day+"  "+hou+":"+min+":"+se;
+                            li+="<li class='clearfix'}>";
+                            li+="<div>";
+                            li+="<a href=\"#\">";
+                            li+=data[i].n_title;
+                            li+="</a>";
+                            li+="</div>";
+                            li+="<div>";
+                            li+="<span>";
+                            li+=time;
+                            li+="</span>";
+                            li+="</div>";
+                            li+="</li>";
+                        }
+                        $("#ajaxRequest").append(li);
+
+                    }
+            });
+            });
+
+        });
+        $(function () {
+            $("#pageFen").click(function () {
+                var index=$("#countpage").val(); //总页数
+                var totalpage=$("#countpage1").val(); //当前页码
+                var aqa=  mathPages(index,totalpage);
+                function mathPages(index,totalpage) {  //页码和一共有多少页
+                    var indexs=[];
+                    for (var i = 0; i <=totalpage; i++) {
+                        indexs.push(i);         //先根据总页数创建数组,将全部页标全部添加到数据中
+                    }
+                    if(totalpage<=6){
+                        return indexs; //总页数<=6时,直接输出即可
+                    }
+                    if(index<2){
+                        indexs=indexs.slice(0,6);
+                        return indexs;
+                    }else{
+                        var indexs2=indexs.slice(index-3,indexs+3);
+                        //如果当前页标>2  ,则从当前页标-3开始截取总页数数标数组,截取6个
+                        if(indexs.length>=6){
+                            return indexs2;   //如果当前页不是倒数后3页,则截取没问题,直接输入
+                        }else{
+                            indexs2=indexs.slice(-6);
+                            return indexs2; //如果当前页是倒数后3页,就截取不到6个页标,那么直接最后截取6个页标即可
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+<!--- header begin-->
+<header id="pc-header">
+    <div class="BHeader">
+        <div class="yNavIndex">
+            <ul class="BHeaderl">
+                <li><a href="#">登录</a></li>
+                <li class="headerul">|</li>
+                <li><a href="#">订单查询</a></li>
+                <li class="headerul">|</li>
+                <li><a href="#">我的收藏</a></li>
+                <li class="headerul">|</li>
+                <li id="pc-nav" class="menu"><a href="#" class="tit">我的商城</a>
+                    <div class="subnav">
+                        <a href="#">我的山城</a>
+                        <a href="#">我的山城</a>
+                        <a href="#">我的山城</a>
+                    </div>
+                </li>
+                <li class="headerul">|</li>
+                <li><a href="#" class="M-iphone">手机悦商城</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container clearfix">
+        <div class="header-logo fl"><h1><a href="#"><img src="theme/icon/logo.png"></a></h1></div>
+        <div class="member-title fl"><h2></h2></div>
+        <div class="head-form fl">
+            <form class="clearfix">
+                <input type="text" class="search-text" accesskey="" id="key" autocomplete="off" placeholder="洗衣机">
+                <button class="button" onClick="search('key');return false;">搜索</button>
+            </form>
+            <div class="words-text clearfix">
+                <a href="#" class="red">1元秒爆</a>
+                <a href="#">低至五折</a>
+                <a href="#">农用物资</a>
+                <a href="#">买一赠一</a>
+                <a href="#">佳能相机</a>
+                <a href="#">稻香村月饼</a>
+                <a href="#">服装城</a>
+            </div>
+        </div>
+        <div class="header-cart fr"><a href="#"><img src="theme/icon/car.png"></a> <i class="head-amount">99</i></div>
+    </div>
+</header>
+<!-- header End -->
+
+<div class="containers">
+    <div class="pc-nav-item"><a href="#">首页</a> &gt; <a href="#">会员中心 </a> &gt; <a href="#">商城快讯</a></div>
+</div>
+
+<!-- 商城快讯 begin -->
+<section id="member">
+    <div class="member-center clearfix">
+        <div class="member-left fl">
+            <div class="member-apart clearfix">
+                <div class="fl"><a href="#"><img src="theme/img/bg/mem.png"></a></div>
+                <div class="fl">
+                    <p>用户名：</p>
+                    <p><a href="#">亚里士多德</a></p>
+                    <p>搜悦号：</p>
+                    <p>389323080</p>
+                </div>
+            </div>
+            <div class="member-lists">
+                <dl>
+                    <dt>我的商城</dt>
+                    <dd><a href="index.html">我的订单</a></dd>
+                    <dd><a href="my-s.html">我的收藏</a></dd>
+                    <dd><a href="my-user.html">账户安全</a></dd>
+                    <dd><a href="my-p.html">我的评价</a></dd>
+                    <dd><a href="my-add.html">地址管理</a></dd>
+                </dl>
+                <dl>
+                    <dt>客户服务</dt>
+                    <dd><a href="retreat-cha.html">退货申请</a></dd>
+                    <dd><a href="retreat.html">退货/退款记录</a></dd>
+                </dl>
+                <dl>
+                    <dt>我的消息</dt>
+                    <dd class="cur"><a href="new.html">商城快讯</a></dd>
+                    <dd><a href="#">帮助中心</a></dd>
+                </dl>
+            </div>
+        </div>
+        <div class="member-right fr">
+            <div class="member-head">
+                <div class="member-heels fl"><h2>商城快讯</h2></div>
+            </div>
+            <div class="member-border">
+                <div class="member-form clearfix">
+                    <form>
+                        <input type=text class="text-news" placeholder="商城快讯关键字">
+                        <input type="button" class="button-btn" value="搜索">
+                    </form>
+                </div>
+                <div class="member-entry">
+                    <div class="member-issue clearfix">
+                        <span>标题</span>
+                        <span>发布时间</span>
+                    </div>
+                    <ul id="ajaxRequest">
+                        <li class="clearfix" th:each="map:${session.map }" >
+                            <div ><a href="#" th:text="${map.n_title }">不做女汉字换季护肤保卫战</a></div>
+                            <div ><span th:text="${map.n_time }" >2015-03-31 17:23:20</span></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="member-pages clearfix">
+                    <div class="fr pc-search-g">
+                        <a th:href="@{selectNews(pageNum=${session.page.getPageNum()}-1)}" th:class="${session.page.getPageNum()==1} ? 'fl pc-search-f'" >上一页</a>
+                        <input type="hidden" id="countpage" th:value="${session.page.getPages()}" />
+                        <input type="hidden" id="countpage1" th:value="${session.page.getPageNum()}"/>
+                        <a th:class="${session.page.getPageNum()== 1}?'current'" href="javascript:;" id="pageFen">1</a>
+                        <a th:class="${session.page.getPageNum()== 2}?'current'">2</a>
+                        <a th:class="${session.page.getPageNum()== 3}?'current'">3</a>
+                        <a th:class="${session.page.getPageNum()== 4}?'current'">4</a>
+                        <a th:class="${session.page.getPageNum()== 5}?'current'">5</a>
+                        <a th:class="${session.page.getPageNum()== 6}?'current'">6</a>
+                        <a th:href="@{selectNews(pageNum=${session.page.getPageNum()}+1)}"  th:class="${session.page.getPageNum()==session.page.pages} ? 'fl pc-search-f'" class=" pc-search-n"
+                           title="使用方向键右键也可翻到下一页哦！">下一页</a>
+                        <span class="pc-search-y">
+                        <em>  共 <sapn th:text="${session.page.getPages()}"> 20 </sapn>页    </em>
+                        <!--到第-->
+                            <!--<input type="text" placeholder="1" class="pc-search-j">-->
+                        <!--<em>页</em>-->
+                    </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 商城快讯 End -->
+
+<!--- footer begin-->
+<div class="aui-footer-bot">
+    <div class="time-lists aui-footer-pd clearfix">
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d1.png"></span>
+                <em>消费者权益</em>
+            </h4>
+            <ul>
+                <li><a href="#">保障范围 </a></li>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">服务中心 </a></li>
+                <li><a href="#">服务中心</a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d2.png"></span>
+                <em>新手上路</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">服务中心 </a></li>
+                <li><a href="#">服务中心</a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d3.png"></span>
+                <em>保障正品</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">服务中心 </a></li>
+                <li><a href="#">服务中心</a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>
+                <span><img src="theme/icon/icon-d1.png"></span>
+                <em>消费者权益</em>
+            </h4>
+            <ul>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">服务中心 </a></li>
+                <li><a href="#">服务中心</a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+            </ul>
+        </div>
+    </div>
+    <div style="border-bottom:1px solid #dedede"></div>
+    <div class="time-lists aui-footer-pd time-lists-ls clearfix">
+        <div class="aui-footer-list clearfix">
+            <h4>购物指南</h4>
+            <ul>
+                <li><a href="#">保障范围 </a></li>
+                <li><a href="#">购物流程</a></li>
+                <li><a href="#">会员介绍 </a></li>
+                <li><a href="#">生活旅行</a></li>
+                <li><a href="#"> 常见问题 </a></li>
+                <li><a href="#"> 联系客服购物指南 </a></li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>特色服务</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">服务中心 </a></li>
+                <li><a href="#">服务中心</a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>帮助中心</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">服务中心 </a></li>
+                <li><a href="#">服务中心</a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+            </ul>
+        </div>
+        <div class="aui-footer-list clearfix">
+            <h4>新手指导</h4>
+            <ul>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">退货退款流程</a></li>
+                <li><a href="#">服务中心 </a></li>
+                <li><a href="#">服务中心</a></li>
+                <li><a href="#">服务中心</a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+                <li><a href="#"> 更多特色服务 </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- footer End -->
+</body>
+</html>

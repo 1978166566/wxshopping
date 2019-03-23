@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cssl.dao.SiteMapper">
+    <!--查询该用户的默认收货地址-->
+    <select id="selSiteDft" resultType="map" parameterType="int">
+          SELECT   b.`u_email`,`s_id`,a.`u_name`,`s_isempty`,`s_region`,`s_d_address`,`u_phone`
+                FROM `site` a,`users` b
+                WHERE a.`u_id`=b.`u_id` AND `s_isempty`=1 AND a.`u_id`=#{u_id}
+    </select>
+    <!--清除该用户下的默认地址-->
+    <update id="setDefaultZore">
+        UPDATE `site` SET `s_isempty`=0 WHERE u_id=#{u_id}
+    </update>
+    <!--添加site表信息-->
+    <insert id="insertSite" parameterType="map">
+        INSERT INTO `site`(`u_id`,`u_name`,`s_region`,`s_d_address`) VALUES(#{u_id},#{u_name},#{s_region},#{s_d_address})
+    </insert>
+    <!--更新用户表的邮箱和电话-->
+    <update id="setEmailPhone" parameterType="map">
+        UPDATE `users` SET `u_email`=#{u_email},`u_phone`=#{u_phone} where `u_id`=#{u_id}
+    </update>
+      <!--删除site默认地址表数据-->
+    <delete id="delSite">
+        DELETE  FROM `site` WHERE `s_id`=#{s_id}
+    </delete>
+    <!--获取删除之后最大的地址编号-->
+    <select id="selMaxSid" resultType="Integer">
+        SELECT MAX(s_id) FROM `site`  WHERE u_id= #{u_id} GROUP BY u_id;
+    </select>
+    <!--修改后产生默认地址-->
+    <update id="updateSiteDFT" parameterType="map">
+        UPDATE site SET s_isempty=1 WHERE  u_id=#{u_id} AND s_id = #{s_id}
+    </update>
+    <select id="selSitecount" resultType="int">
+        SELECT COUNT(1) FROM `site`  WHERE u_id= #{u_id}
+    </select>
+    <!--修改地址表数据-->
+    <update id="updateSite" parameterType="map">
+        UPDATE `site` SET `u_name`=#{u_name},`s_region`=#{s_region}, `s_d_address`=#{s_d_address}
+         WHERE `s_id`=#{s_id}
+    </update>
+    <!--修改用户表的电话,邮箱-->
+    <update id="updateUser" parameterType="map">
+        UPDATE `users` SET  `u_phone`=#{u_phone},`u_email`=#{u_email}
+         WHERE  `u_id`=#{u_id}
+    </update>
+
+    <select id="selordersite" resultType="Site">
+            SELECT * FROM SITE WHERE S_ISEMPTY=1 AND U_ID=#{u_id}
+        </select>
+
+
+  </mapper>

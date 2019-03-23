@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cssl.dao.TowClassMapper">
+    <select id="selthreelist" resultType="map">
+                      SELECT T.* FROM ONE_CLASS O
+                      INNER JOIN TOW_CLASS T ON(T.OC_ID=O.OC_ID AND O.OC_ID=#{oc_id})
+                    </select>
+</mapper>

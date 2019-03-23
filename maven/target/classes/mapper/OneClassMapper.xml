@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cssl.dao.OneClassMapper">
+    <select id="sellist" resultType="map">
+                        SELECT * FROM ONE_CLASS WHERE OC_FID IS NULL
+                    </select>
+    <select id="seltolist" resultType="map">
+                        SELECT OE.* FROM ONE_CLASS O
+                        INNER JOIN ONE_CLASS OE ON(O.OC_ID=OE.OC_FID AND O.OC_ID=#{oc_id})
+                    </select>
+</mapper>

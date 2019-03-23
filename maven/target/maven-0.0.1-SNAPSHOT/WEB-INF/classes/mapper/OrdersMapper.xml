@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cssl.dao.OrdersMapper">
+   <!--插入订单-->
+    <insert id="insertOrders" parameterType="map">
+        INSERT INTO `orders`(`o_number`,`u_id`,`o_payment`,`o_totalprice`) VALUES(#{o_number},#{u_id},#{o_payment},#{o_totalprice})
+    </insert>
+    <!--插入订单详情-->
+    <insert id="insertOrderDetails" parameterType="map">
+        INSERT INTO `orders_details`(`o_number`,`cy_id`,`od_pirce`,`od_quantity`) VALUES(#{o_number},#{cy_id},#{od_pirce},#{od_quantity})
+    </insert>
+    <resultMap id="getmap" type="Orders">
+        <id column="O_NUMBER" property="o_number"></id>
+        <collection property="list" ofType="map"></collection>
+    </resultMap>
+    <!-- 按订单状态查询订单 -->
+    <select id="getorders" resultMap="getmap">
+        SELECT DISTINCT(C.CY_ID),O.O_NUMBER,O.O_TIME,O.O_TYPE,O.O_PAYMENT,
+        OD.OD_PIRCE,OD.OD_QUANTITY,C.CY_NAME,O.O_TOTALPRICE,
+        P.P_COLOR,P.P_IMAGE,U.U_ID,SE.U_NAME FROM ORDERS O
+        INNER JOIN USERS U ON(O.U_ID=U.U_ID)
+        INNER JOIN ORDERS_DETAILS OD ON(O.O_NUMBER=OD.O_NUMBER)
+        INNER JOIN COMMODITY C ON(OD.CY_ID=C.CY_ID)
+        INNER JOIN CDETAILS CD ON(C.CY_ID=CD.CY_ID)
+        INNER JOIN PRODUCT P ON(CD.CS_ID=P.CS_ID)
+        INNER JOIN SITE SE ON (U.U_ID=SE.U_ID)
+        <where>
+            U.U_ID=#{u_id} AND SE.S_ISEMPTY=1
+            <if test="o_type!=null and o_type!=''">
+                <if test="o_type==1">
+                    AND O.O_TYPE=1
+                </if>
+                <if test="o_type==2">
+                    AND O.O_TYPE=2
+                </if>
+                <if test="o_type==3">
+                    AND O.O_TYPE=3
+                </if>
+                <if test="o_type==4">
+                    AND O.O_TYPE=4 OR O.O_TYPE=5 OR O.O_TYPE=6
+                </if>
+            </if>
+        </where>
+        ORDER BY O_NUMBER DESC
+    </select>
+    <!-- 查询未付款的订单总数 -->
+    <select id="selobligation" resultType="int">
+                            SELECT COUNT(O_NUMBER) 'obligation' FROM ORDERS WHERE O_TYPE=1
+                        </select>
+    <!-- 删除订单 -->
+    <delete id="delOrder" parameterType="String">
+                            DELETE FROM ORDERS WHERE O_NUMBER=#{O_NUMBER}
+                        </delete>
+    <!-- 修改订单状态 -->
+    <update id="updaOrder" parameterType="map">
+                            UPDATE ORDERS SET O_TYPE=#{o_type} WHERE O_NUMBER=#{O_NUMBER}
+                        </update>
+    <!-- 查询用户的一个订单 -->
+    <select id="selOrder" resultMap="getmap">
+                            SELECT DISTINCT(C.CY_ID),O.O_NUMBER,O.O_TIME,O.O_TYPE,O.O_PAYMENT,
+                            OD.OD_PIRCE,OD.OD_QUANTITY,C.CY_NAME,O.O_TOTALPRICE,
+                            P.P_COLOR,P.P_IMAGE,U.U_ID,S.U_NAME FROM ORDERS O
+                            INNER JOIN USERS U ON(O.U_ID=U.U_ID)
+                            INNER JOIN ORDERS_DETAILS OD ON(O.O_NUMBER=OD.O_NUMBER)
+                            INNER JOIN COMMODITY C ON(OD.CY_ID=C.CY_ID)
+                            INNER JOIN CDETAILS CD ON(C.CY_ID=CD.CY_ID)
+                            INNER JOIN PRODUCT P ON(CD.CS_ID=P.CS_ID)
+                            INNER JOIN SITE S ON(U.U_ID=S.U_ID)
+                            WHERE O.O_NUMBER=#{o_number} AND U.U_ID=#{u_id} AND S.S_ISEMPTY=1
+                        </select>
+    <!-- 按订单号查询一个订单 -->
+    <select id="seloneorder" resultMap="getmap">
+                            SELECT O.O_NUMBER,O.O_TIME,O.O_TYPE,O.O_TOTALPRICE,U.U_PHONE
+                            FROM ORDERS O
+                            INNER JOIN USERS U ON(O.U_ID=U.U_ID)
+                            WHERE O.O_NUMBER=#{o_number}
+                        </select>
+    <!-- 取消订单和退货时查询一个订单中订单详情的数量 -->
+    <select id="selorder" resultMap="getmap">
+                            SELECT O.O_NUMBER,O.O_TIME,O.O_TYPE,O.O_TOTALPRICE,
+                            OD.OD_PIRCE,OD.OD_QUANTITY,U.U_PHONE,C.CY_ID,C.CY_INTRODUCTION,c.cy_price
+                            FROM ORDERS O
+                            INNER JOIN USERS U ON(O.U_ID=U.U_ID)
+                            INNER JOIN ORDERS_DETAILS OD ON(O.O_NUMBER=OD.O_NUMBER)
+                            INNER JOIN COMMODITY C ON(C.CY_ID=OD.CY_ID)
+                            WHERE O.O_NUMBER=#{o_number}
+                        </select>
+    <!-- 查询用户的订单是否存在 -->
+    <select id="SelIsOrders" resultType="int">SELECT COUNT(O_NUMBER) FROM ORDERS WHERE O_NUMBER=#{number} AND U_ID=#{id}</select>
+</mapper>
